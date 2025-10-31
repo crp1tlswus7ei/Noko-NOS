@@ -1,0 +1,75 @@
+import discord # ?
+from discord import app_commands
+from discord.ext import commands
+from misc.Buttons import ForbiddenButton
+from misc.Exceptions import *
+from misc.Messages import *
+
+class LockC(commands.Cog):
+   from misc.Roles import f_overLockdown
+   def __init__(self, core):
+      self.core = core
+      self.docs_button = ForbiddenButton()
+
+   @app_commands.command(
+      name = 'lock_channel',
+      description = 'Lock actual channel',
+      nsfw = False
+   )
+   @app_commands.describe(
+      channel = 'Channel to lock messages.'
+   )
+   async def lock_channel(
+           self,
+           interaction: discord.Interaction,
+           user: discord.Member,
+           channel: discord.TextChannel = None
+   ):
+      # permissions
+      try:
+         if not interaction.user.guild_permissions.administrator:
+            await interaction.response.send_message(
+               embed = noperms_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if channel is None:
+            pass
+
+      # handler permissions
+      except discord.Forbidden:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.docs_button
+         )
+      except Exception as e:
+         print(f'f-lock_down: (permissions); {e}')
+
+      # re channel
+      channel = channel or interaction.channel # Actual channel
+
+      # primary
+      try:
+         await channel.set_permissions(
+            interaction.guild.default_role, # everyone
+            overwrite = self.f_overLockdown
+         )
+         await interaction.response.send_message(
+            embed = lockdown_(interaction, user, channel),
+            ephemeral = False
+         )
+      # handler primary
+      except discord.Forbidden:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.docs_button
+         )
+      except Exception as e:
+         print(f'f-lock_down: (primary); {e}')
+
+# Cog
+async def setup(core):
+   await core.add_cog(LockC(core))
