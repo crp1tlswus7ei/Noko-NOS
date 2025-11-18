@@ -1,28 +1,25 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
-class ClearWarns(commands.Cog):
-   from misc.SysWarn import (
-      get_warns,
-      c_warns
-   )
+class Purge(commands.Cog):
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'clear_warns',
-      description = 'Clear all warnings from a user.',
+      name = 'purge',
+      description = 'Clear all messages from a specific user.',
       nsfw = False
    )
    @app_commands.describe(
-      user = 'User to clean warns.'
+      user = 'User to clear messages.'
    )
-   async def clear_warns(
+   async def purge(
            self,
            interaction: discord.Interaction,
            user: discord.Member
@@ -31,12 +28,12 @@ class ClearWarns(commands.Cog):
       try:
          if interaction.user.id == user.id:
             await interaction.response.send_message(
-               embed = clearys_(interaction),
+               embed = purgeys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.manage_messages:
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
@@ -64,38 +61,53 @@ class ClearWarns(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'c-clear_warns: (permissions); {e}')
+         print(f'x-purge: (permissions); {e}')
          return
 
       # secondary
-      user_id = str(user.id)
-      warns_ = self.get_warns(user_id) # ignore unfilled
+      def check_usr(msg):
+         return msg.author.id == user.id
 
-      if not warns_:
-         await interaction.response.send_message(
-            embed = nowarns_(interaction, user),
-            ephemeral = True
-         )
-         return
+      # defer for primary
+      await interaction.response.defer(
+         ephemeral = True
+      )
 
       # primary
       try:
-         self.c_warns(user_id) # ignore unfilled
-         await interaction.response.send_message(
-            embed = clearw_(interaction, user),
-            ephemeral = False
+         await interaction.channel.purge(
+            limit = 7049,
+            check = check_usr,
          )
+         await interaction.followup.send(
+            embed = purge_(interaction, user),
+            ephemeral = True # True
+         )
+
       # handler primary
       except discord.Forbidden:
-         await interaction.response.send_message(
+         await interaction.followup.send(
             embed = corexcepctions(interaction),
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'c-clear_warns: (primary); {e}')
+         print(f'x-purge: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(ClearWarns(core))
+   await core.add_cog(Purge(core))

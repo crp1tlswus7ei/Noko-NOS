@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -13,6 +13,7 @@ class HardMute(commands.Cog):
    )
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
@@ -68,8 +69,15 @@ class HardMute(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
          print(f'd-hard_mute: (permissions); {e}')
+         return
 
       # secondary
       rm_ = [ # to remove
@@ -117,8 +125,15 @@ class HardMute(commands.Cog):
                      embed = channelerror_(interaction),
                      ephemeral = True
                   )
+               except discord.InteractionResponded:
+                  await interaction.response.send_message(
+                     embed = corexcepctions(interaction),
+                     ephemeral = True,
+                     view = self.int_button
+                  )
                except Exception as e:
                   print(f'd-hard_mute: (ChannelPermissions); {e}')
+                  return
 
          # handler HardMuteRole
          except discord.Forbidden:
@@ -127,14 +142,21 @@ class HardMute(commands.Cog):
                ephemeral = True,
                view = self.docs_button
             )
+         except discord.InteractionResponded:
+            await interaction.response.send_message(
+               embed = corexcepctions(interaction),
+               ephemeral = True,
+               view = self.int_button
+            )
          except Exception as e:
             print(f'd-hard_mute: (HardMuteRole); {e}')
+            return
 
       # primary
       try:
          if hm_r not in user.roles:
             await user.remove_roles(*rm_, reason = reason)
-            await self.asyncio.sleep(1) # 1 second sleep
+            await self.asyncio.sleep(1) # 1-second sleep
             await user.add_roles(hm_r, reason = 'Hard Mute')
             await interaction.response.send_message(
                embed = hardmute_(interaction, user),
@@ -154,8 +176,15 @@ class HardMute(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
          print(f'd-hard_mute: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):

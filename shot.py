@@ -12,7 +12,7 @@ class Shot:
       self.token = os.getenv('CORE_TOKEN')
       self.mongo_uri = os.getenv('MONGO_URI')
       self.shot = MongoClient(self.mongo_uri)
-      self.ints = discord.Intents.all() # change3
+      self.ints = discord.Intents.all() # change
       self.core = commands.Bot(
          intents = self.ints,
          command_prefix = self.prefix,
@@ -53,9 +53,9 @@ class Shot:
    # load commands
    async def load_(self):
       try:
-         for filename in os.listdir('./cmds'):
+         for filename in os.listdir('./extensions'):
             if filename.endswith('.py'):
-               await self.core.load_extension(f'cmds.{filename[:-3]}')
+               await self.core.load_extension(f'extensions.{filename[:-3]}')
 
       # handler load
       except Exception as e:

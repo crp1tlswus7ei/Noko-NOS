@@ -1,28 +1,32 @@
 import discord # ?
+from datetime import timedelta
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
-class Untimeout(commands.Cog):
+class Timeout(commands.Cog):
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'untimeout',
-      description = 'Remove mute from timeout command.',
+      name = 'timeout',
+      description = 'Mutes a user for certain period of time.',
       nsfw = False
    )
    @app_commands.describe(
       user = 'User to be santioned.',
-      reason = 'Reason for sanction.'
+      duration = 'Minutes of sanction.',
+      reason = 'Reason for sanction.',
    )
-   async def untimeout(
+   async def timeout(
            self,
-           interaction :discord.Interaction,
-           user :discord.Member,
+           interaction: discord.Interaction,
+           user: discord.Member,
+           duration: int,
            *,
            reason: str
    ):
@@ -30,7 +34,7 @@ class Untimeout(commands.Cog):
       try:
          if interaction.user.id == user.id:
             await interaction.response.send_message(
-               embed = unmuteys_(interaction),
+               embed = hardmuteys_(interaction),
                ephemeral = True
             )
             return
@@ -38,6 +42,13 @@ class Untimeout(commands.Cog):
          if interaction.user.guild_permissions.mute_members:
             await interaction.response.send_message(
                embed = noperms_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if duration is None or duration <= 0:
+            await interaction.response.send_message(
+               embed = noduration_(interaction),
                ephemeral = True
             )
             return
@@ -63,20 +74,29 @@ class Untimeout(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'e-un_timeout: (permissions); {e}')
+         print(f'e-timeout: (permissions); {e}')
          return
 
       # primary
       try:
          await user.timeout(
-            None,
+            timedelta(
+               minutes = duration
+            ),
             reason = reason
          )
-         await interaction.responses.send_message(
-            embed = untimeout_(interaction, user),
+         await interaction.response.send_message(
+            embed = timeout_(interaction, user, duration),
             ephemeral = False
          )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
@@ -84,9 +104,16 @@ class Untimeout(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed=corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'e-un_timeout: (primary); {e}')
+         print(f'e-timeout: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(Untimeout(core))
+   await core.add_cog(Timeout(core))

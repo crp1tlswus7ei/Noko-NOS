@@ -392,6 +392,24 @@ def purgeys_(
    )
    return embed
 
+# massrole messages
+def inprocessrole_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+    embed = discord.Embed(
+        title = 'MassRole: in process...',
+        color = discord.Color.light_gray()
+    )
+    return embed
+
+def massrole_(
+        interaction: discord.Interaction, # ignore weak warning
+        role: discord.Role) -> discord.Embed:
+    embed = discord.Embed(
+        title = f'MassRole: {role}',
+        color = discord.Color.dark_green()
+    )
+    return embed
+
 # load message
 def load_(
         interaction: discord.Interaction,

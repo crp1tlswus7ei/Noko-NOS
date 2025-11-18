@@ -1,29 +1,26 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
-class Warn(commands.Cog):
-   from misc.SysWarn import (
-      get_warns, # ignore weak warning
-      add_warns
-   )
+class Ban(commands.Cog):
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'warn',
-      description = 'Warn a user about behavior',
+      name = 'ban',
+      description = 'Permanent expulsion to a user.',
       nsfw = False
    )
    @app_commands.describe(
       user = 'User to be sanctioned.',
-      reason = 'Reason for sanction.'
+      reason = 'The reason for sanction.'
    )
-   async def warn(
+   async def ban(
            self,
            interaction: discord.Interaction,
            user: discord.Member,
@@ -34,12 +31,12 @@ class Warn(commands.Cog):
       try:
          if interaction.user.id == user.id:
             await interaction.response.send_message(
-               embed = warnys_(interaction),
+               embed = banys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.ban_members:
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
@@ -67,28 +64,43 @@ class Warn(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'c-warn: (permissions); {e}')
+         print(f'a-ban: (permissions); {e}')
          return
 
       # primary
-      user_id = str(user.id)
       try:
-         total_warns = self.add_warns(user_id, reason = reason) # ignore unfilled
+         await user.ban(reason = reason)
          await interaction.response.send_message(
-            embed = warn_(interaction, total_warns),
+            embed = ban_(interaction, user),
             ephemeral = False
          )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
+            view = self.docs_button,
+            ephemeral = True
+         )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.int_button
          )
       except Exception as e:
-         print(f'c-warn: (primary); {e}')
+         print(f'a-ban: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(Warn(core))
+   await core.add_cog(Ban(core))
+
+# Solved

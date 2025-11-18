@@ -11,12 +11,12 @@ class ForbiddenButton(discord.ui.View):
          )
       )
 
-class PermissionsButton(discord.ui.View):
+class InteractionButton(discord.ui.View):
    def __init__(self):
       super().__init__()
       self.add_item(
          discord.ui.Button(
             label = 'Documentation',
-            url = '' # add url
+            url = 'https://discordpy.readthedocs.io/en/stable/api.html#discord.InteractionResponded'
          )
       )

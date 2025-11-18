@@ -18,7 +18,7 @@ def noperms(ctx) -> discord.Embed: # ignore weak warning
    )
    return embed
 
-def noamount(ctx) -> discord.Embed:
+def noamount(ctx) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Enter a valid amount.',
       color = discord.Color.light_gray()
@@ -35,7 +35,7 @@ def noprefix(ctx) -> discord.Embed: # ignore weak warning
    )
    return embed
 
-def lenprefix(ctx) -> discord.Embed:
+def lenprefix(ctx) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Prefix cannot have more than 4 characters.',
       color = discord.Color.light_gray()
@@ -55,7 +55,7 @@ def permscore_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Noko is not allowed to perform this action.',
-      color = discord.color.dark_red()
+      color = discord.Color.dark_red()
    )
    embed.set_footer(
       text = 'Check documentation for more information.'
@@ -66,6 +66,17 @@ def corexcepctions(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Error executing command',
+      color = discord.Color.dark_red() # severe
+   )
+   embed.set_footer(
+      text = 'Check the error documentation.'
+   )
+   return embed
+
+def intexception(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = 'Interaction error.',
       color = discord.Color.dark_red() # severe
    )
    embed.set_footer(
@@ -110,6 +121,7 @@ def nullid_(
    embed.set_footer(
       text = 'Make sure the ID is correct.'
    )
+   return embed
 
 # general interaction
 def noperms_(
@@ -164,7 +176,7 @@ def noamount_(
    return embed
 
 def noduration_(
-        interaction: discord.Interaction) -> discord.Embed:
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Enter a valid duration in minutes.',
       color = discord.Color.light_gray()
@@ -186,7 +198,7 @@ def roletop_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'You cannot handle this role.',
-      color = discord.color.light_gray()
+      color = discord.Color.light_gray()
    )
    return embed
 

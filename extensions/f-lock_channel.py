@@ -1,25 +1,26 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
-class UnlockC(commands.Cog):
-   from misc.Roles import f_overUnlock
+class LockC(commands.Cog):
+   from misc.Roles import f_overLockdown
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'unlock_channel',
-      description = 'Unlock actual channel',
+      name = 'lock_channel',
+      description = 'Lock actual channel',
       nsfw = False
    )
    @app_commands.describe(
-      channel = 'Channel to unlock.'
+      channel = 'Channel to lock messages.'
    )
-   async def unlock_channel(
+   async def lock_channel(
            self,
            interaction: discord.Interaction,
            user: discord.Member,
@@ -39,13 +40,20 @@ class UnlockC(commands.Cog):
 
       # handler permissions
       except discord.Forbidden:
-         await interactionr.response.send_message(
+         await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'd-unlock_down: (permissions); {e}')
+         print(f'f-lock_down: (permissions); {e}')
+         return
 
       # re channel
       channel = channel or interaction.channel # Actual channel
@@ -54,12 +62,13 @@ class UnlockC(commands.Cog):
       try:
          await channel.set_permissions(
             interaction.guild.default_role, # everyone
-            overwrite = self.f_overUnlock
+            overwrite = self.f_overLockdown
          )
          await interaction.response.send_message(
-            embed = unlockdown_(interaction, user, channel),
+            embed = lockdown_(interaction, user, channel),
             ephemeral = False
          )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
@@ -67,9 +76,16 @@ class UnlockC(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'f-unlock_down: (primary); {e}')
+         print(f'f-lock_down: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(UnlockC(core))
+   await core.add_cog(LockC(core))

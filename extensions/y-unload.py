@@ -3,7 +3,7 @@ import discord # ?
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv as core_load
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -13,24 +13,24 @@ PASS = str(
    os.getenv('CORE_AUTH')
 )
 
-class Reload(commands.Cog):
+class Unload(commands.Cog):
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'reload',
-      description = 'Reload a bot extension.',
+      name = 'unload',
+      description = 'Unload a bot extension.',
       nsfw = False
    )
    @app_commands.describe(
       extension = 'Extension name to load.',
       password = 'auth'
    )
-   async def reload(
+   async def load(
            self,
            interaction: discord.Interaction,
-         # user: discord.Member,
            extension: str,
            password: str
    ):
@@ -40,7 +40,7 @@ class Reload(commands.Cog):
             pass
          else:
             await interaction.response.send_message(
-               embed = noauth_(interaction, user),
+               embed = noauth_(interaction), # ignore unfilled
                ephemeral = True
             )
             return
@@ -52,24 +52,25 @@ class Reload(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'y-reload: (permissions); {e}')
+         print(f'y-unload: (permissions); {e}')
+         return
 
       # primary
       try:
-         await self.core.reload_extension(f'cmds.`{extension}`')
+         await self.core.unload_extension(f'cmds.`{extension}`')
          await interaction.response.send_message(
-            embed = reload_(interaction, extension),
+            embed = unload_(interaction, extension),
             ephemeral = True
-          # view = self.reload_button
          )
 
       # handler primary
-      except commands.ExtensionAlreadyLoaded:
-         await interaction.response.send_message(
-            embed = extalreadyload_(interaction, extension),
-            ephemeral = True
-         )
       except commands.ExtensionNotFound:
          await interaction.response.send_message(
             embed = extnotfound_(interaction, extension),
@@ -78,11 +79,17 @@ class Reload(commands.Cog):
       except commands.ExtensionNotLoaded:
          await interaction.response.send_message(
             embed = extnotload_(interaction, extension),
-            ephemeral = True
+         )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
          )
       except Exception as e:
-         print(f'y-reload: (primary); {e}')
+         print(f'y-unload: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(Reload(core))
+   await core.add_cog(Unload(core))

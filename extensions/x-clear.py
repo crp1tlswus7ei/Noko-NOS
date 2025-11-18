@@ -1,6 +1,5 @@
 import discord # ?
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -8,7 +7,6 @@ class Clear(commands.Cog):
    import asyncio
    def __init__(self, core):
       self.core = core
-      self.docs_button = ForbiddenButton()
 
    @commands.hybrid_command(
       name = 'clear',
@@ -42,6 +40,7 @@ class Clear(commands.Cog):
          )
       except Exception as e:
          print(f'x-clear: (permissions); {e}')
+         return
 
       # primary
       try:
@@ -52,8 +51,9 @@ class Clear(commands.Cog):
          await ctx.send(
             embed = mclear
          )
-         await self.asyncio.sleep(3) # sleep 3 seconds
+         await self.asyncio.sleep(3) # sleep 3-seconds
          await mclear.delete()
+
       # handler primary
       except discord.Forbidden:
          await ctx.send(
@@ -61,6 +61,8 @@ class Clear(commands.Cog):
          )
       except Exception as e:
          print(f'x-clear: (primary); {e}')
+         return
 
+# Cog
 async def setup(core):
    await core.add_cog(Clear(core))

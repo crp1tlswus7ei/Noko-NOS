@@ -1,13 +1,14 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
 class CloneR(commands.Cog):
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
@@ -24,7 +25,7 @@ class CloneR(commands.Cog):
            *,
            role: discord.Role
    ):
-      # permissios
+      # permissions
       try:
          if not interaction.user.guild_permissions.administrator:
             await interaction.response.send_message(
@@ -40,6 +41,13 @@ class CloneR(commands.Cog):
             )
             return
 
+         if role >= interaction.user.top_role and interaction.user:
+             await interaction.response.send_message(
+                 embed = roletop_(interaction),
+                 ephemeral = True
+             )
+             return
+
       # handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
@@ -47,8 +55,15 @@ class CloneR(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
          print(f'g-clone_role: (permissions); {e}')
+         return
 
       # primary
       try:
@@ -87,8 +102,15 @@ class CloneR(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
          print(f'g-clone_role: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):

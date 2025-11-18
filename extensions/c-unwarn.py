@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -12,6 +12,7 @@ class Unwarn(commands.Cog):
    )
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
@@ -65,6 +66,12 @@ class Unwarn(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
          print(f'c-clear_warns: (permissions); {e}')
          return
@@ -87,12 +94,13 @@ class Unwarn(commands.Cog):
             await interaction.response.send_message(
                embed = unwarn_(interaction, user),
                ephemeral = False
-            ) # no footer !!
+            ) # no footer !!!
          else:
             await interaction.response.send_message(
                embed = nullwarn_(interaction),
                ephemeral = False
             )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
@@ -100,8 +108,14 @@ class Unwarn(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'c-unwarn: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):

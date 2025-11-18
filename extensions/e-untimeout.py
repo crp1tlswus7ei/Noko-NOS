@@ -1,28 +1,29 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
-class Ban(commands.Cog):
+class Untimeout(commands.Cog):
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'ban',
-      description = 'Permanent expulsion to a user.',
+      name = 'untimeout',
+      description = 'Remove mute from timeout command.',
       nsfw = False
    )
    @app_commands.describe(
-      user = 'User to be sanctioned.',
-      reason = 'The reason for sanction.'
+      user = 'User to be santioned.',
+      reason = 'Reason for sanction.'
    )
-   async def ban(
+   async def untimeout(
            self,
-           interaction: discord.Interaction,
-           user: discord.Member,
+           interaction :discord.Interaction,
+           user :discord.Member,
            *,
            reason: str
    ):
@@ -30,12 +31,12 @@ class Ban(commands.Cog):
       try:
          if interaction.user.id == user.id:
             await interaction.response.send_message(
-               embed = banys_(interaction),
+               embed = unmuteys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.ban_members:
+         if interaction.user.guild_permissions.mute_members:
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
@@ -63,29 +64,44 @@ class Ban(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'a-ban: (permissions); {e}')
+         print(f'e-un_timeout: (permissions); {e}')
          return
 
       # primary
       try:
-         await user.ban(reason = reason)
-         await interaction.response.send_message(
-            embed = ban_(interaction, user),
+         await user.timeout(
+            None,
+            reason = reason
+         )
+         await interaction.responses.send_message(
+            embed = untimeout_(interaction, user),
             ephemeral = False
          )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
-            view = self.docs_button,
-            ephemeral = True
+            ephemeral = True,
+            view = self.docs_button
+         )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
          )
       except Exception as e:
-         print(f'a-ban: (primary); {e}')
+         print(f'e-un_timeout: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(Ban(core))
-
-# Solved
+   await core.add_cog(Untimeout(core))

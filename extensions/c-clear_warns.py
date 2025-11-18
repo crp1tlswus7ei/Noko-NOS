@@ -1,53 +1,45 @@
 import discord # ?
-from datetime import timedelta
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import ForbiddenButton, InteractionButton
 from misc.Exceptions import *
 from misc.Messages import *
 
-class Timeout(commands.Cog):
+class ClearWarns(commands.Cog):
+   from misc.SysWarn import (
+      get_warns,
+      c_warns
+   )
    def __init__(self, core):
       self.core = core
+      self.int_button = InteractionButton()
       self.docs_button = ForbiddenButton()
 
    @app_commands.command(
-      name = 'timeout',
-      description = 'Mutes a user for certain period of time.',
+      name = 'clear_warns',
+      description = 'Clear all warnings from a user.',
       nsfw = False
    )
    @app_commands.describe(
-      user = 'User to be santioned.',
-      duration = 'Minutes of sanction.',
-      reason = 'Reason for sanction.',
+      user = 'User to clean warns.'
    )
-   async def timeout(
+   async def clear_warns(
            self,
            interaction: discord.Interaction,
-           user: discord.Member,
-           duration: int,
-           *,
-           reason: str
+           user: discord.Member
    ):
       # permissions
       try:
          if interaction.user.id == user.id:
             await interaction.response.send_message(
-               embed = hardmuteys_(interaction),
+               embed = clearys_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.guild_permissions.mute_members:
+         if not interaction.user.guild_permissions.manage_roles:
             await interaction.response.send_message(
                embed = noperms_(interaction),
-               ephemeral = True
-            )
-            return
-
-         if duration is None or duration <= 0:
-            await interaction.response.send_message(
-               embed = noduration_(interaction),
                ephemeral = True
             )
             return
@@ -73,22 +65,35 @@ class Timeout(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'e-timeout: (permissions); {e}')
+         print(f'c-clear_warns: (permissions); {e}')
+         return
+
+      # secondary
+      user_id = str(user.id)
+      warns_ = self.get_warns(user_id) # ignore unfilled
+
+      if not warns_:
+         await interaction.response.send_message(
+            embed = nowarns_(interaction, user),
+            ephemeral = True
+         )
          return
 
       # primary
       try:
-         await user.timeout(
-            timedelta(
-               minutes = duration
-            ),
-            reason = reason
-         )
+         self.c_warns(user_id) # ignore unfilled
          await interaction.response.send_message(
-            embed = timeout_(interaction, user, duration),
+            embed = clearw_(interaction, user),
             ephemeral = False
          )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
@@ -96,9 +101,16 @@ class Timeout(commands.Cog):
             ephemeral = True,
             view = self.docs_button
          )
+      except discord.InteractionResponded:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.int_button
+         )
       except Exception as e:
-         print(f'e-timeout: (primary); {e}')
+         print(f'c-clear_warns: (primary); {e}')
+         return
 
 # Cog
 async def setup(core):
-   await core.add_cog(Timeout(core))
+   await core.add_cog(ClearWarns(core))
