@@ -1,15 +1,16 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
 class Purge(commands.Cog):
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'purge',
@@ -59,13 +60,13 @@ class Purge(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'x-purge: (permissions); {e}')
@@ -88,7 +89,7 @@ class Purge(commands.Cog):
          )
          await interaction.followup.send(
             embed = purge_(interaction, user),
-            ephemeral = True # True
+            ephemeral = True, # Cannot False
          )
 
       # handler primary
@@ -96,13 +97,13 @@ class Purge(commands.Cog):
          await interaction.followup.send(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
-         await interaction.response.send_message(
+         await interaction.followup.send(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'x-purge: (primary); {e}')

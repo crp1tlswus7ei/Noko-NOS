@@ -2,15 +2,16 @@ import discord # ?
 from datetime import timedelta
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
 class Timeout(commands.Cog):
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'timeout',
@@ -39,7 +40,7 @@ class Timeout(commands.Cog):
             )
             return
 
-         if interaction.user.guild_permissions.mute_members:
+         if not interaction.user.guild_permissions.mute_members:
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
@@ -72,13 +73,13 @@ class Timeout(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'e-timeout: (permissions); {e}')
@@ -87,14 +88,13 @@ class Timeout(commands.Cog):
       # primary
       try:
          await user.timeout(
-            timedelta(
-               minutes = duration
-            ),
+            timedelta(minutes = duration),
             reason = reason
          )
          await interaction.response.send_message(
             embed = timeout_(interaction, user, duration),
-            ephemeral = False
+            ephemeral = False,
+            view = self.delete
          )
 
       # handler primary
@@ -102,13 +102,13 @@ class Timeout(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed=corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'e-timeout: (primary); {e}')

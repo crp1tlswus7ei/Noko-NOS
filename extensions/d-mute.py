@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -12,8 +12,9 @@ class Mute(commands.Cog):
    )
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'mute',
@@ -66,13 +67,13 @@ class Mute(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'd-mute: (permissions); {e}')
@@ -118,13 +119,14 @@ class Mute(commands.Cog):
                except discord.Forbidden:
                   await interaction.response.send_message(
                      embed = channelerror_(interaction),
-                     ephemeral = True
+                     ephemeral = True,
+                     view = self.docs
                   )
                except discord.InteractionResponded:
                   await interaction.response.send_message(
                      embed = corexcepctions(interaction),
                      ephemeral = True,
-                     view = self.int_button
+                     view = self.interactionb
                   )
                except Exception as e:
                   print(f'd-mute: (ChannelPermissions): {e}')
@@ -135,13 +137,13 @@ class Mute(commands.Cog):
             await interaction.response.send_message(
                embed = corexcepctions(interaction),
                ephemeral = True,
-               view = self.docs_button
+               view = self.docs
             )
          except discord.InteractionResponded:
             await interaction.response.send_message(
                embed = corexcepctions(interaction),
                ephemeral = True,
-               view = self.int_button
+               view = self.interactionb
             )
          except Exception as e:
             print(f'd-mute: (MuteRole); {e}')
@@ -153,7 +155,8 @@ class Mute(commands.Cog):
             await user.add_roles(m_r, reason = reason)
             await interaction.response.send_message(
                embed = mute_(interaction, user),
-               ephemeral = False
+               ephemeral = False,
+               view = self.delete
             )
          else:
             await interaction.response.send_message(
@@ -167,13 +170,13 @@ class Mute(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'd-mute: (primary): {e}')

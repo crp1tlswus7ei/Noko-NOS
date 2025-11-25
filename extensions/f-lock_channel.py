@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -9,8 +9,9 @@ class LockC(commands.Cog):
    from misc.Roles import f_overLockdown
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'lock_channel',
@@ -43,13 +44,13 @@ class LockC(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'f-lock_down: (permissions); {e}')
@@ -66,7 +67,8 @@ class LockC(commands.Cog):
          )
          await interaction.response.send_message(
             embed = lockdown_(interaction, user, channel),
-            ephemeral = False
+            ephemeral = False,
+            view = self.delete
          )
 
       # handler primary
@@ -74,13 +76,13 @@ class LockC(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'f-lock_down: (primary); {e}')

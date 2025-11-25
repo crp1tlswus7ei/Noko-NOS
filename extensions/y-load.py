@@ -3,7 +3,7 @@ import discord # ?
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv as core_load
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -16,8 +16,8 @@ PASS = str(
 class Load(commands.Cog):
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'load',
@@ -51,13 +51,13 @@ class Load(commands.Cog):
          await interaction.response.send_message(
             embed = authexception(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'y-load: (permissions); {e}')
@@ -65,11 +65,10 @@ class Load(commands.Cog):
 
       # primary
       try:
-         await self.core.load_extension(f'cmds.`{extension}`')
+         await self.core.load_extension(f'extensions.`{extension}`')
          await interaction.response.send_message(
             embed = load_(interaction, extension),
             ephemeral = True
-          # view = self.reload_button
          )
 
       #handler primary
@@ -88,11 +87,17 @@ class Load(commands.Cog):
             embed = extnotload_(interaction, extension),
             ephemeral = True
          )
+      except discord.Forbidden:
+         await interaction.response.send_message(
+            embed = corexcepctions(interaction),
+            ephemeral = True,
+            view = self.docs
+         )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'y-load: (primary); {e}')

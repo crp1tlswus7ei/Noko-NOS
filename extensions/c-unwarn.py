@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -12,8 +12,9 @@ class Unwarn(commands.Cog):
    )
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'unwarn',
@@ -64,13 +65,13 @@ class Unwarn(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'c-clear_warns: (permissions); {e}')
@@ -93,8 +94,9 @@ class Unwarn(commands.Cog):
             self.remove_warn(user_id, amount - 1) # ignore unfilled
             await interaction.response.send_message(
                embed = unwarn_(interaction, user),
-               ephemeral = False
-            ) # no footer !!!
+               ephemeral = False,
+               view = self.delete
+            )
          else:
             await interaction.response.send_message(
                embed = nullwarn_(interaction),
@@ -106,15 +108,16 @@ class Unwarn(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
+         print(f'c-unwarn: (primary); {e}')
          return
 
 # Cog

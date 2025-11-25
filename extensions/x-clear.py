@@ -4,7 +4,6 @@ from misc.Exceptions import *
 from misc.Messages import *
 
 class Clear(commands.Cog):
-   import asyncio
    def __init__(self, core):
       self.core = core
 
@@ -21,7 +20,7 @@ class Clear(commands.Cog):
    ):
       # permissions
       try:
-         if ctx.author.guild_permissions.manage_messages:
+         if not ctx.author.guild_permissions.manage_messages:
             await ctx.send(
                embed = noperms(ctx)
             )
@@ -45,14 +44,11 @@ class Clear(commands.Cog):
       # primary
       try:
          await ctx.channel.purge(
-            limit = amount + 1
+            limit = amount
          )
-         mclear = clear(ctx, amount)
          await ctx.send(
-            embed = mclear
+            embed = clear(ctx, amount)
          )
-         await self.asyncio.sleep(3) # sleep 3-seconds
-         await mclear.delete()
 
       # handler primary
       except discord.Forbidden:

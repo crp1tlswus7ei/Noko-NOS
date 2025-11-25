@@ -1,7 +1,34 @@
 import discord
 from discord.ui import View, Button
 
-class ForbiddenButton(discord.ui.View):
+from misc.Exceptions import intresponse_
+
+
+class Delete(View):
+   def __init__(self):
+      super().__init__(timeout = None)
+
+      delete_button = Button(
+         emoji = '<:white_cross:1405656979266867210>',
+         style = discord.ButtonStyle.danger, # ignore warn
+      )
+      delete_button.callback = self.delete_message
+      self.add_item(delete_button)
+
+   async def delete_message(
+           self,
+           interaction: discord.Interaction
+   ):
+      if interaction.user != interaction.message.interaction.user:
+         await interaction.response.send_message(
+            embed = intresponse_(interaction),
+            ephemeral = True
+         )
+         return
+
+      await interaction.message.delete()
+
+class Forbidden(discord.ui.View):
    def __init__(self):
       super().__init__()
       self.add_item(
@@ -11,7 +38,7 @@ class ForbiddenButton(discord.ui.View):
          )
       )
 
-class InteractionButton(discord.ui.View):
+class InteractionB(discord.ui.View):
    def __init__(self):
       super().__init__()
       self.add_item(

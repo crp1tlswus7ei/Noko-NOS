@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -9,7 +9,9 @@ class UnlockC(commands.Cog):
    from misc.Roles import f_overUnlock
    def __init__(self, core):
       self.core = core
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'unlock_channel',
@@ -42,13 +44,13 @@ class UnlockC(commands.Cog):
          await interactionr.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'd-unlock_down: (permissions); {e}')
@@ -65,20 +67,22 @@ class UnlockC(commands.Cog):
          )
          await interaction.response.send_message(
             embed = unlockdown_(interaction, user, channel),
-            ephemeral = False
+            ephemeral = False,
+            view = self.delete
          )
+
       # handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'f-unlock_down: (primary); {e}')

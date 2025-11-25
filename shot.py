@@ -4,18 +4,18 @@ import discord
 from discord.ext import commands
 from pymongo import MongoClient
 from dotenv import load_dotenv as load_auth
+from misc.SysPrefix import get_prefix
 
 load_auth()
 class Shot:
    def __init__(self):
-      self.prefix = '!!' # default prefix
       self.token = os.getenv('CORE_TOKEN')
       self.mongo_uri = os.getenv('MONGO_URI')
       self.shot = MongoClient(self.mongo_uri)
       self.ints = discord.Intents.all() # change
       self.core = commands.Bot(
          intents = self.ints,
-         command_prefix = self.prefix,
+         command_prefix = get_prefix,
          help_command = None,
        # strip_after_prefix = True,
          owner_id = 529441009004707840  # crp1tlswus7ei

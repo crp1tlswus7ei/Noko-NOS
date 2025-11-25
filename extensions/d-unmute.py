@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -14,8 +14,9 @@ class Unmute(commands.Cog):
    )
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'unmute',
@@ -67,13 +68,14 @@ class Unmute(commands.Cog):
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
-            ephemeral = True
+            ephemeral = True,
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'd-unmute: (permissions); {e}')
@@ -112,13 +114,14 @@ class Unmute(commands.Cog):
                except discord.Forbidden:
                   await interaction.response.send_message(
                      embed = channelerror_(interaction),
-                     ephemeral = True
+                     ephemeral = True,
+                     view = self.docs
                   )
                except discord.InteractionResponded:
                   await interaction.response.send_message(
                      embed = corexcepctions(interaction),
                      ephemeral = True,
-                     view = self.int_button
+                     view = self.interactionb
                   )
                except Exception as e:
                   print(f'd-unmute: (ChannelPermissions-Mute); {e}')
@@ -128,13 +131,14 @@ class Unmute(commands.Cog):
          except discord.Forbidden:
             await interaction.response.send_message(
                embed = corexcepctions(interaction),
-               ephemeral = True
+               ephemeral = True,
+               view = self.docs
             )
          except discord.InteractionResponded:
             await interaction.response.send_message(
                embed = corexcepctions(interaction),
                ephemeral = True,
-               view = self.int_button
+               view = self.interactionb
             )
          except Exception as e:
             print(f'd-unmute: (MuteRole); {e}')
@@ -164,13 +168,13 @@ class Unmute(commands.Cog):
                   await interaction.response.send_message(
                      embed = channelerror_(interaction),
                      ephemeral = True,
-                     view = self.docs_button
+                     view = self.docs
                   )
                except discord.InteractionResponded:
                   await interaction.response.send_message(
                      embed = corexcepctions(interaction),
                      ephemeral = True,
-                     view = self.int_button
+                     view = self.interactionb
                   )
                except Exception as e:
                   print(f'd-unmute: (ChannelPermissions-HardMute); {e}')
@@ -181,13 +185,13 @@ class Unmute(commands.Cog):
             await interaction.response.send_message(
                embed = corexcepctions(interaction),
                ephemeral = True,
-               view = self.docs_button
+               view = self.docs
             )
          except discord.InteractionResponded:
             await interaction.response.send_message(
                embed = corexcepctions(interaction),
                ephemeral = True,
-               view = self.int_button
+               view = self.interactionb
             )
          except Exception as e:
             print(f'd-unmute: (HardMuteRole); {e}')
@@ -199,14 +203,16 @@ class Unmute(commands.Cog):
             await user.remove_roles(m_r, reason = reason)
             await interaction.response.send_message(
                embed = unmute_(interaction, user),
-               ephemeral = False
+               ephemeral = False,
+               view = self.delete
             )
          else:
             if hm_r in user.roles:
                await user.remove_roles(hm_r, reason = reason)
                await interaction.response.send_message(
                   embed = unmute_(interaction, user),
-                  ephemeral = False
+                  ephemeral = False,
+                  view = self.delete
                )
             else:
                await interaction.response.send_message(
@@ -220,13 +226,13 @@ class Unmute(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'd-unmute: (primary); {e}')

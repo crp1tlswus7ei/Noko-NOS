@@ -1,17 +1,15 @@
 import discord # ?
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton
+from misc.SysPrefix import get_prefix, update_prefix # ignore weak
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
 class Prefix(commands.Cog):
-   from misc.SysPrefix import (
-      get_prefix, # ignore weak
-      update_prefix
-   )
-   def __init(self, core):
+   def __init__(self, core):
       self.core = core
-      self.docs_button = ForbiddenButton()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @commands.hybrid_command(
       name = 'set_prefix',
@@ -27,19 +25,22 @@ class Prefix(commands.Cog):
       try:
          if not ctx.author.guild_permissions.administrator:
             await ctx.send(
-               embed = noperms(ctx)
+               embed = noperms(ctx),
+               ephemeral = True
             )
             return
 
          if new_prefix is None:
             await ctx.send(
-               embed = noprefix(ctx)
+               embed = noprefix(ctx),
+               ephemeral = True
             )
             return
 
-         if len(new_prefix) > 4:
+         if len(new_prefix) > 2:
             await ctx.send(
-               embed = lenprefix(ctx)
+               embed = lenprefix(ctx),
+               ephemeral = True
             )
             return
 
@@ -47,26 +48,41 @@ class Prefix(commands.Cog):
       except discord.Forbidden:
          await ctx.send(
             embed = exceptioncore(ctx),
-            view = self.docs_button
+            view = self.docs
+         )
+      except discord.InteractionResponded:
+         await ctx.send(
+            embed = inteexception(ctx),
+            ephemeral = True,
+            view = self.interactionb
          )
       except Exception as e:
          print(f'z-set_prefix: (permissions); {e}')
+         return
 
       # primary
       try:
-         await self.update_prefix(ctx, new_prefix) # ignore unfilled and weak
+         await update_prefix(ctx, new_prefix) # ignore unfilled and weak
          await ctx.send(
             embed = setprefix_(ctx, new_prefix)
-
          )
+
       # handler primary
       except discord.Forbidden:
          await ctx.send(
             embed = exceptioncore(ctx),
-            view = self.docs_button
+            view = self.docs
+         )
+      except discord.InteractionResponded:
+         await ctx.send(
+            embed = inteexception(ctx),
+            ephemeral = True,
+            view = self.interactionb
          )
       except Exception as e:
          print(f'z-set_prefix: (primary); {e}')
+         return
 
+# Cog
 async def setup(core):
    await core.add_cog(Prefix(core))

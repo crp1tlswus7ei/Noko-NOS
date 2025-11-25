@@ -4,10 +4,20 @@ import discord
 def exceptioncore(ctx) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Error executing command.',
-      color = discord.Color.dark_red()
+      color = discord.Color.dark_red() # severe
    )
    embed.set_footer(
       text = 'Check the error documentation.',
+   )
+   return embed
+
+def inteexception(ctx) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = 'Interaction error.',
+      color = discord.Color.dark_red() # severe
+   )
+   embed.set_footer(
+      text = 'Check the error documentation.'
    )
    return embed
 
@@ -37,7 +47,7 @@ def noprefix(ctx) -> discord.Embed: # ignore weak warning
 
 def lenprefix(ctx) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
-      title = 'Prefix cannot have more than 4 characters.',
+      title = 'Prefix cannot have more than 2 characters.',
       color = discord.Color.light_gray()
    )
    return embed
@@ -81,6 +91,14 @@ def intexception(
    )
    embed.set_footer(
       text = 'Check the error documentation.'
+   )
+   return embed
+
+def intresponse_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = 'You cannot delete this message.',
+      color = discord.Color.dark_red()
    )
    return embed
 

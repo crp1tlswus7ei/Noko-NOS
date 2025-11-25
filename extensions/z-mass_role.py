@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -9,8 +9,9 @@ class MassRole(commands.Cog):
    def __init__(self, core):
       self.core = core
       self.count = 0
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'mass_role',
@@ -54,13 +55,13 @@ class MassRole(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'mass_role: (permissions); {e}')
@@ -89,13 +90,13 @@ class MassRole(commands.Cog):
                await interaction.followup.send(
                   embed = corexcepctions(interaction),
                   ephemeral = True, # check
-                  view = self.docs_button
+                  view = self.docs
                )
             except discord.InteractionResponded:
-               await interaction.response.send_message(
+               await interaction.followup.send(
                   embed = corexcepctions(interaction),
                   ephemeral = True,
-                  view = self.int_button
+                  view = self.interactionb
                )
             except Exception as e:
                print(f'mass_role: (secondary); {e}')
@@ -104,7 +105,8 @@ class MassRole(commands.Cog):
          # success
          msg = await interaction.original_response()
          await msg.edit(
-            embed = massrole_(interaction, role)
+            embed = massrole_(interaction, role),
+            view = self.delete
          )
 
       # handler primary
@@ -112,13 +114,13 @@ class MassRole(commands.Cog):
          await interaction.followup.send(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'mass_role: (primary); {e}')

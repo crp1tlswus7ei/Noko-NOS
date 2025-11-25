@@ -1,7 +1,7 @@
 import discord # ?
 from discord import app_commands
 from discord.ext import commands
-from misc.Buttons import ForbiddenButton, InteractionButton
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -9,8 +9,9 @@ class Warnings(commands.Cog):
    from misc.SysWarn import get_warns
    def __init__(self, core):
       self.core = core
-      self.int_button = InteractionButton()
-      self.docs_button = ForbiddenButton()
+      self.delete = Delete()
+      self.interactionb = InteractionB()
+      self.docs = Forbidden()
 
    @app_commands.command(
       name = 'warnings',
@@ -53,13 +54,13 @@ class Warnings(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'c-warnings: (permissions); {e}')
@@ -75,7 +76,8 @@ class Warnings(commands.Cog):
                   interaction,
                   f'{user.display_name} warns:\n' + '\n'.join(user_warns)
                ),
-               ephemeral = False
+               ephemeral = False,
+               view = self.delete
             )
          else:
             await interaction.response.send_message(
@@ -88,13 +90,13 @@ class Warnings(commands.Cog):
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.docs_button
+            view = self.docs
          )
       except discord.InteractionResponded:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
             ephemeral = True,
-            view = self.int_button
+            view = self.interactionb
          )
       except Exception as e:
          print(f'c-warnings: (primary); {e}')
