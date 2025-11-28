@@ -25,6 +25,10 @@ class Mute(commands.Cog):
       user = 'User to mute.',
       reason = 'Reason for mute.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def mute(
            self,
            interaction: discord.Interaction,

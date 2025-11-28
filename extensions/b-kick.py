@@ -21,6 +21,9 @@ class Kick(commands.Cog):
       user = 'User to be sanctioned.',
       reason = 'Reason for sanction.'
    )
+   @app_commands.default_permissions(
+      kick_members = True
+   )
    async def kick(
            self,
            interaction: discord.Interaction,

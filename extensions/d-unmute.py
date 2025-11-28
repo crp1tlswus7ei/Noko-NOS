@@ -27,6 +27,10 @@ class Unmute(commands.Cog):
       user = 'User to remove mute.',
       reason = 'Reason for remove mute.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def unmute(
            self,
            interaction: discord.Interaction,
@@ -43,7 +47,7 @@ class Unmute(commands.Cog):
             )
             return
 
-         if interaction.user.guild_permissions.manage_permissions:
+         if interaction.user.guild_permissions.manage_roles:
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True

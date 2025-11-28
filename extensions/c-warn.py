@@ -25,6 +25,10 @@ class Warn(commands.Cog):
       user = 'User to be sanctioned.',
       reason = 'Reason for sanction.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def warn(
            self,
            interaction: discord.Interaction,

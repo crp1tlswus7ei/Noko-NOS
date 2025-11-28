@@ -7,6 +7,7 @@ MONGO_URI = os.getenv('MONGO_URI')
 shot = MongoClient(MONGO_URI)
 db = shot["kiko"]
 w_coll = db["prefix"]
+default_prefix = '!!'
 
 async def get_prefix(bot, message):
    if not message.guild:
@@ -24,5 +25,12 @@ async def update_prefix(ctx, new_prefix):
    w_coll.update_one(
       {'_id': ctx.guild.id},
       {'$set': {'prefix': new_prefix}},
+      upsert = True
+   )
+
+async def delete_prefix(ctx):
+   w_coll.update_one(
+      {"_id": ctx.guild.id},
+      {"$set": {"prefix": default_prefix}},
       upsert = True
    )

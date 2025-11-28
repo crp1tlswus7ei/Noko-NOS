@@ -20,6 +20,9 @@ class Unban(commands.Cog):
    @app_commands.describe(
       user_id = 'ID of the user to remove ban.'
    )
+   @app_commands.default_permissions(
+      ban_members = True
+   )
    async def unban(
            self,
            interaction: discord.Interaction,

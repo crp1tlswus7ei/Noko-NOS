@@ -23,6 +23,10 @@ class Timeout(commands.Cog):
       duration = 'Minutes of sanction.',
       reason = 'Reason for sanction.',
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def timeout(
            self,
            interaction: discord.Interaction,

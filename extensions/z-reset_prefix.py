@@ -1,27 +1,25 @@
-import discord # ?
+import discord
 from discord.ext import commands
-from misc.SysPrefix import get_prefix, update_prefix # ignore weak
+from misc.SysPrefix import get_prefix, delete_prefix # ignore weak
 from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
-class Prefix(commands.Cog):
+class ResetPrefix(commands.Cog):
    def __init__(self, core):
       self.core = core
       self.interactionb = InteractionB()
       self.docs = Forbidden()
 
    @commands.hybrid_command(
-      name = 'set_prefix',
-      aliases = ['prefix'],
+      name = 'reset_prefix',
       nsfw = False
    )
-   async def set_prefix(
+   async def reset_prefix(
            self,
-           ctx,
-           new_prefix: str
+           ctx
    ):
-      # permisisons
+      # permissions
       try:
          if not ctx.author.guild_permissions.administrator:
             await ctx.send(
@@ -30,21 +28,7 @@ class Prefix(commands.Cog):
             )
             return
 
-         if new_prefix is None:
-            await ctx.send(
-               embed = noprefix(ctx),
-               ephemeral = True
-            )
-            return
-
-         if len(new_prefix) > 2:
-            await ctx.send(
-               embed = lenprefix(ctx),
-               ephemeral = True
-            )
-            return
-
-      # handler permissions
+      # hancler permissions
       except discord.Forbidden:
          await ctx.send(
             embed = exceptioncore(ctx),
@@ -56,14 +40,14 @@ class Prefix(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'z-set_prefix: (permissions); {e}')
+         print(f'z-reset_prefix: (permissions); {e}')
          return
 
       # primary
       try:
-         await update_prefix(ctx, new_prefix) # ignore unfilled and weak
+         await delete_prefix(ctx)
          await ctx.send(
-            embed = setprefix_(ctx, new_prefix)
+            embed = resetprefix_(ctx)
          )
 
       # handler primary
@@ -78,9 +62,8 @@ class Prefix(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'z-set_prefix: (primary); {e}')
-         return
+         print(f'z-reset_prefix: (permissions); {e}')
 
 # Cog
 async def setup(core):
-   await core.add_cog(Prefix(core))
+   await core.add_cog(ResetPrefix(core))

@@ -28,6 +28,9 @@ class Reload(commands.Cog):
       extension = 'Extension name to load.',
       password = 'auth'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def reload(
            self,
            interaction: discord.Interaction,

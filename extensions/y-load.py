@@ -28,10 +28,12 @@ class Load(commands.Cog):
       extension = 'Extension name to load.',
       password = 'auth'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def load(
            self,
            interaction: discord.Interaction,
-           user: discord.Member,
            extension: str,
            password: str
    ):
@@ -41,7 +43,7 @@ class Load(commands.Cog):
             pass
          else:
             await interaction.response.send_message(
-               embed = noauth_(interaction, user), # ignore unfilled
+               embed = noauth_(interaction), # ignore unfilled
                ephemeral = True
             )
             return

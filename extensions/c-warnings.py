@@ -21,6 +21,9 @@ class Warnings(commands.Cog):
    @app_commands.describe(
       user = 'User to review warnings.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True
+   )
    async def warnings(
            self,
            interaction: discord.Interaction,

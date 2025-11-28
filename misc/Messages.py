@@ -24,6 +24,17 @@ def setprefix_(
    )
    return embed
 
+def resetprefix_(ctx) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Prefix reset.',
+      color = discord.Color.light_gray()
+   )
+   embed.set_footer(
+      text = f'Prefix reset by: {ctx.author.display_name}',
+      icon_url = ctx.author.avatar
+   )
+   return embed
+
 # Ban messages
 def ban_(
         interaction: discord.Interaction,

@@ -257,8 +257,8 @@ def channelerror_(
 
 # auth messages
 def noauth_(
-        interaction: discord.Interaction,
-        user: discord.Member) -> discord.Embed: # ignore weak warning
+        interaction: discord.Interaction) -> discord.Embed:
+   user = interaction.user
    embed = discord.Embed(
       title = 'Authorization required: 401.',
       color = discord.Color.dark_red()

@@ -20,6 +20,9 @@ class Purge(commands.Cog):
    @app_commands.describe(
       user = 'User to clear messages.'
    )
+   @app_commands.default_permissions(
+      manage_messages = True,
+   )
    async def purge(
            self,
            interaction: discord.Interaction,

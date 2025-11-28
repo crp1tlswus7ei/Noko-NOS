@@ -21,6 +21,10 @@ class Untimeout(commands.Cog):
       user = 'User to be santioned.',
       reason = 'Reason for sanction.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def untimeout(
            self,
            interaction :discord.Interaction,

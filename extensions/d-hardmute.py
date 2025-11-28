@@ -26,6 +26,10 @@ class HardMute(commands.Cog):
       user = 'User to be sanctioned.',
       reason = 'Reason for sanction.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def hardmute(
            self,
            interaction: discord.Interaction,

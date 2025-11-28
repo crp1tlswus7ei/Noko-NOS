@@ -20,6 +20,9 @@ class CloneR(commands.Cog):
    @app_commands.describe(
       role = 'Role to clone.'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def clone_role(
            self,
            interaction: discord.Interaction,

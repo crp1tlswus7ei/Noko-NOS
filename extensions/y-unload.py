@@ -28,6 +28,9 @@ class Unload(commands.Cog):
       extension = 'Extension name to load.',
       password = 'auth'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def load(
            self,
            interaction: discord.Interaction,

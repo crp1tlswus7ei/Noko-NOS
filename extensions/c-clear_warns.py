@@ -24,6 +24,10 @@ class ClearWarns(commands.Cog):
    @app_commands.describe(
       user = 'User to clean warns.'
    )
+   @app_commands.default_permissions(
+      manage_roles = True,
+      mute_members = True
+   )
    async def clear_warns(
            self,
            interaction: discord.Interaction,

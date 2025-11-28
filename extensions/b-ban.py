@@ -21,6 +21,9 @@ class Ban(commands.Cog):
       user = 'User to be sanctioned.',
       reason = 'The reason for sanction.'
    )
+   @app_commands.default_permissions(
+      ban_members = True
+   )
    async def ban(
            self,
            interaction: discord.Interaction,

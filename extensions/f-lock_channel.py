@@ -21,6 +21,9 @@ class LockC(commands.Cog):
    @app_commands.describe(
       channel = 'Channel to lock messages.'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def lock_channel(
            self,
            interaction: discord.Interaction,

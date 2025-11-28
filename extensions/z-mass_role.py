@@ -21,6 +21,9 @@ class MassRole(commands.Cog):
    @app_commands.describe(
       role = 'Role to add globally.'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def mass_role(
            self,
            interaction: discord.Interaction,

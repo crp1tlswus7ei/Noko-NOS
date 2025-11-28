@@ -21,6 +21,9 @@ class UnlockC(commands.Cog):
    @app_commands.describe(
       channel = 'Channel to unlock.'
    )
+   @app_commands.default_permissions(
+      administrator = True
+   )
    async def unlock_channel(
            self,
            interaction: discord.Interaction,
