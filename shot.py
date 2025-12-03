@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from pymongo import MongoClient
 from dotenv import load_dotenv as load_auth
-from misc.SysPrefix import get_prefix
+from handler.SysPrefix import get_prefix
 
 load_auth()
 class Shot:
@@ -17,7 +17,7 @@ class Shot:
          intents = self.ints,
          command_prefix = get_prefix,
          help_command = None,
-       # strip_after_prefix = True,
+         strip_after_prefix = True,
          owner_id = 529441009004707840  # crp1tlswus7ei
       )
 

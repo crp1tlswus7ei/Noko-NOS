@@ -1,4 +1,3 @@
-import discord # ?
 from discord import app_commands
 from discord.ext import commands
 from misc.Buttons import *
@@ -6,8 +5,8 @@ from misc.Exceptions import *
 from misc.Messages import *
 
 class Warn(commands.Cog):
-   from misc.SysWarn import (
-      get_warns, # ignore weak warning
+   from handler.SysWarn import (
+      # ignore weak warning
       add_warns
    )
    def __init__(self, core):

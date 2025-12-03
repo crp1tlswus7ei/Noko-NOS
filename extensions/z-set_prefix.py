@@ -1,6 +1,5 @@
-import discord # ?
 from discord.ext import commands
-from misc.SysPrefix import get_prefix, update_prefix # ignore weak
+from handler.SysPrefix import update_prefix # ignore weak
 from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *

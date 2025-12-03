@@ -1,4 +1,3 @@
-import discord # ?
 from discord import app_commands
 from discord.ext import commands
 from misc.Buttons import *
@@ -6,7 +5,7 @@ from misc.Exceptions import *
 from misc.Messages import *
 
 class ClearWarns(commands.Cog):
-   from misc.SysWarn import (
+   from handler.SysWarn import (
       get_warns,
       c_warns
    )
