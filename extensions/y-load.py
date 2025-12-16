@@ -73,7 +73,7 @@ class Load(commands.Cog):
             ephemeral = True
          )
 
-      #handler primary
+      # handler primary
       except commands.ExtensionAlreadyLoaded:
          await interaction.response.send_message(
             embed = extalreadyload_(interaction, extension),

@@ -421,6 +421,37 @@ def massrole_(
     )
     return embed
 
+# autoRole messages
+def inprocessauto_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = 'AutoRole: in process...',
+      color = discord.Color.light_gray()
+   )
+   return embed
+
+def autoff_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = 'Auto Role disabled.',
+      color = discord.Color.light_gray()
+   )
+   return embed
+
+def autorole_(
+        interaction: discord.Interaction,
+        role: discord.Role) -> discord.Embed:
+   embed = discord.Embed(
+      title = f'Auto Role: {role.name}',
+      description = 'Now all new users will be assigned this role.',
+      color = discord.Color.light_gray() # change to primary color
+    )
+   embed.set_footer(
+      text = f'AutoRole enabled by: {interaction.user.display_name}',
+      icon_url = interaction.user.avatar
+   )
+   return embed
+
 # load message
 def load_(
         interaction: discord.Interaction,

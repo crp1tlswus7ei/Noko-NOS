@@ -1,6 +1,8 @@
 import os
 from pymongo import MongoClient
+from dotenv import load_dotenv as core_load
 
+core_load()
 MONGO_URI = os.getenv('MONGO_URI')
 shot = MongoClient(MONGO_URI)
 db = shot["kiko"]

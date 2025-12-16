@@ -1,5 +1,6 @@
+import discord # ?
 from discord.ext import commands
-from handler.SysPrefix import delete_prefix # ignore weak
+from systems.SysPrefix import get_prefix, delete_prefix # ignore weak
 from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
@@ -27,7 +28,7 @@ class ResetPrefix(commands.Cog):
             )
             return
 
-      # hancler permissions
+      # handler permissions
       except discord.Forbidden:
          await ctx.send(
             embed = exceptioncore(ctx),

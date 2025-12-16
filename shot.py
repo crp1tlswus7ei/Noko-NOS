@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from pymongo import MongoClient
 from dotenv import load_dotenv as load_auth
-from handler.SysPrefix import get_prefix
+from systems.SysPrefix import get_prefix
 
 load_auth()
 class Shot:
@@ -13,6 +13,7 @@ class Shot:
       self.mongo_uri = os.getenv('MONGO_URI')
       self.shot = MongoClient(self.mongo_uri)
       self.ints = discord.Intents.all() # change
+      self.ints.members = True
       self.core = commands.Bot(
          intents = self.ints,
          command_prefix = get_prefix,
@@ -36,7 +37,7 @@ class Shot:
             sync_ = await self.core.tree.sync()
             print(f'Core: Sync; {len(sync_)} commands.')
 
-         # handler on
+         # systems on
          except Exception as e:
             print(f'!!! Core: (on); {e}')
 
@@ -46,18 +47,18 @@ class Shot:
          self.shot.admin.command('ping')
          print(f'Core: Database Online.')
 
-      # handler db
+      # systems db
       except Exception as e:
          print(f'!!! Core: (connect); {e}')
 
    # load commands
-   async def load_(self):
+   async def load_(self): # 24
       try:
          for filename in os.listdir('./extensions'):
             if filename.endswith('.py'):
                await self.core.load_extension(f'extensions.{filename[:-3]}')
 
-      # handler load
+      # systems load
       except Exception as e:
          print(f'!!! Core: (load); {e}')
 
@@ -65,6 +66,7 @@ class Shot:
       async with self.core:
          await self.load_()
          await self.connect_()
+         await self.core.load_extension('listeners.AutoRoleListener') # change later
          await self.core.start(self.token)
 
 asyncio.run(Shot().shot_())

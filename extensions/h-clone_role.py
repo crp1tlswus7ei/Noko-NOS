@@ -5,8 +5,7 @@ from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
-class Warnings(commands.Cog):
-   from systems.SysWarn import get_warns
+class CloneR(commands.Cog):
    def __init__(self, core):
       self.core = core
       self.delete = Delete()
@@ -14,43 +13,44 @@ class Warnings(commands.Cog):
       self.docs = Forbidden()
 
    @app_commands.command(
-      name = 'warnings',
-      description = 'List of user warnings.',
+      name = 'clone_role',
+      description = 'Clone a existing role.',
       nsfw = False
    )
    @app_commands.describe(
-      user = 'User to review warnings.'
+      role = 'Role to clone.'
    )
    @app_commands.default_permissions(
-      manage_roles = True
+      administrator = True
    )
-   async def warnings(
+   async def clone_role(
            self,
            interaction: discord.Interaction,
-           user: discord.Member
+           *,
+           role: discord.Role
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
-            await interaction.response.send_message(
-               embed = nocore_(interaction),
-               ephemeral = True
-            )
-            return
-
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.administrator:
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if role is None:
             await interaction.response.send_message(
-               embed = nouser_(interaction),
+               embed = norole_(interaction),
                ephemeral = True
             )
             return
+
+         if role >= interaction.user.top_role and interaction.user:
+             await interaction.response.send_message(
+                 embed = roletop_(interaction),
+                 ephemeral = True
+             )
+             return
 
       # handler permissions
       except discord.Forbidden:
@@ -66,27 +66,39 @@ class Warnings(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'c-warnings: (permissions); {e}')
+         print(f'g-clone_role: (permissions); {e}')
          return
 
       # primary
-      user_id = str(user.id)
       try:
-         user_warns = self.get_warns(user_id) # ignore unfilled
-         if user_warns:
-            await interaction.response.send_message(
-               embed = warnings_(
-                  interaction,
-                  f'{user.display_name} warns:\n' + '\n'.join(user_warns)
-               ),
-               ephemeral = False,
-               view = self.delete
-            )
-         else:
-            await interaction.response.send_message(
-               embed = nowarnings_(interaction, user),
-               ephemeral = False
-            )
+         cloner_ = await interaction.guild.create_role(
+            name = f'{role.name} (clone)',
+            permissions = role.permissions,
+            colour = role.colour,
+            hoist = role.hoist,
+            mentionable = role.mentionable,
+            reason = f'Role cloned by: {interaction.user.display_name}'
+         )
+
+         # set
+         await cloner_.edit(
+            position = role.position - 1
+         )
+
+         # embed
+         clone_ = embed_(
+            interaction,
+            f'Clone: {role.name}'
+         )
+         clone_.set_footer(
+            text = f'Clone by {interaction.user.display_name}',
+            icon_url = interaction.user.avatar
+         )
+         await interaction.response.send_message(
+            embed = clone_,
+            ephemeral = False,
+            view = self.delete
+         )
 
       # handler primary
       except discord.Forbidden:
@@ -102,9 +114,9 @@ class Warnings(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'c-warnings: (primary); {e}')
+         print(f'g-clone_role: (primary); {e}')
          return
 
 # Cog
 async def setup(core):
-   await core.add_cog(Warnings(core))
+   await core.add_cog(CloneR(core))

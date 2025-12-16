@@ -85,12 +85,6 @@ class Unban(commands.Cog):
             ephemeral = True,
             view = self.docs
          )
-      except discord.InteractionResponded:
-         await interaction.response.send_message(
-            embed = corexcepctions(interaction),
-            ephemeral = True,
-            view = self.interactionb
-         )
       except Exception as e:
          print(f'a-unban: (secondary); {e}')
          return
