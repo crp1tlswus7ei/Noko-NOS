@@ -20,6 +20,7 @@ class HandlerGlobal(commands.Cog):
          message = f'!!!: ({ctx.command}); {error}',
       )
 
+   # interaction listener
    @commands.Cog.listener()
    async def on_app_command_error(
            self,
@@ -33,6 +34,7 @@ class HandlerGlobal(commands.Cog):
          message = f'!!!: ({cmd}); {error}',
       )
 
+   # global listener
    @commands.Cog.listener()
    async def on_error(
            self,

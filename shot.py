@@ -9,6 +9,9 @@ from systems.SysPrefix import get_prefix
 load_auth()
 class Shot:
    def __init__(self):
+      self.folders = (
+         'extensions', 'listeners'
+      )
       self.token = os.getenv('CORE_TOKEN')
       self.mongo_uri = os.getenv('MONGO_URI')
       self.shot = MongoClient(self.mongo_uri)
@@ -53,20 +56,36 @@ class Shot:
 
    # load commands
    async def load_(self): # 24
+
+      # secondary
       try:
-         for filename in os.listdir('./extensions'):
-            if filename.endswith('.py'):
-               await self.core.load_extension(f'extensions.{filename[:-3]}')
+         for folder in self.folders:
+            path = f'./{folder}'
 
-      # systems load
+            if not os.path.isdir(path):
+               print(f'Core: folder not found: {folder}')
+               continue
+
+            for filename in os.listdir(path):
+               if not filename.endswith('.py'):
+                  continue
+
+               # primary
+               ext_ = f'{folder}.{filename[:-3]}'
+               try:
+                  await self.core.load_extension(ext_)
+               except Exception as e:
+                  print(f'!!! Core: (load primary); {e}')
+
       except Exception as e:
-         print(f'!!! Core: (load); {e}')
+         print(f'!!! Core: (load secondary); {e}')
 
+   # Shot
    async def shot_(self):
       async with self.core:
          await self.load_()
          await self.connect_()
-         await self.core.load_extension('listeners.AutoRoleListener') # change later
          await self.core.start(self.token)
 
+# run
 asyncio.run(Shot().shot_())

@@ -8,13 +8,20 @@ shot = MongoClient(MONGO_URI)
 db = shot["kiko"]
 w_coll = db["warns"]
 
-def get_warns(self, user_id): # ignore weak warning
+async def get_warns(
+        self, # ignore weak
+        user_id
+):
    user_data = w_coll.find_one(
       {"_id": user_id}
    )
    return user_data["warnings"] if user_data else []
 
-def add_warns(self, user_id, reason):
+async def add_warns(
+        self,
+        user_id,
+        reason
+):
    warns = self.get_warns(user_id)
    warns.append(reason)
    w_coll.update_one(
@@ -24,13 +31,20 @@ def add_warns(self, user_id, reason):
    )
    return len(warns)
 
-def c_warns(self, user_id): # ignore weak warning
+async def c_warns(
+        self, # ignore weak
+        user_id
+):
    w_coll.update_one(
       {"_id": user_id},
       {"$set": {"warnings": []}}
    )
 
-def remove_warn(self, user_id, amount):
+async def remove_warn(
+        self,
+        user_id,
+        amount
+):
    warns = self.get_warns(user_id)
    if 0 <= amount < len(warns):
       del warns[amount]

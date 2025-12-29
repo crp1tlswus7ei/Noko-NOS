@@ -8,7 +8,10 @@ shot = MongoClient(MONGO_URI)
 db = shot["kiko"]
 w_coll = db["auto_roles"]
 
-async def set_role(guild_id: int, role_id: int):
+async def set_role(
+        guild_id: int,
+        role_id: int
+):
    w_coll.update_one(
       {'_id': guild_id},
       {'$set': {
@@ -18,7 +21,10 @@ async def set_role(guild_id: int, role_id: int):
       upsert = True
    )
 
-async def toggle(guild_id: int, state: bool):
+async def toggle(
+        guild_id: int,
+        state: bool
+):
    w_coll.update_one(
       {'_id': guild_id},
       {'$set': {'enabled': state}}

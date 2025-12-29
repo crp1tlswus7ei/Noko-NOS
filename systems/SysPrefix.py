@@ -11,7 +11,10 @@ w_coll = db["prefix"]
 default_prefix = '!!',
 aux_prefix = 'core'
 
-async def get_prefix(bot, message):
+async def get_prefix(
+        bot,
+        message
+):
    if not message.guild:
       command.when_mentioned_or(
          default_prefix,
@@ -29,7 +32,10 @@ async def get_prefix(bot, message):
 
    return commands.when_mentioned_or(user_prefix, aux_prefix)(bot, message)
 
-async def update_prefix(ctx, new_prefix):
+async def update_prefix(
+        ctx,
+        new_prefix
+):
    w_coll.update_one(
       {'_id': ctx.guild.id},
       {'$set': {'prefix': new_prefix}},
