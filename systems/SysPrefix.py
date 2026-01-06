@@ -8,7 +8,7 @@ MONGO_URI = os.getenv('MONGO_URI')
 shot = MongoClient(MONGO_URI)
 db = shot["kiko"]
 w_coll = db["prefix"]
-default_prefix = '!!',
+default_prefix = '!',
 aux_prefix = 'core'
 
 async def get_prefix(

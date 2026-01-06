@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv as load_auth
 from systems.SysPrefix import get_prefix
 
+# 878497583438232
 load_auth()
 class Shot:
    def __init__(self):
@@ -15,8 +16,7 @@ class Shot:
       self.token = os.getenv('CORE_TOKEN')
       self.mongo_uri = os.getenv('MONGO_URI')
       self.shot = MongoClient(self.mongo_uri)
-      self.ints = discord.Intents.all() # change
-      self.ints.members = True
+      self.ints = discord.Intents.all()
       self.core = commands.Bot(
          intents = self.ints,
          command_prefix = get_prefix,
@@ -34,7 +34,7 @@ class Shot:
                name = 'In maintenance...'
             ),
             status = discord.Status('dnd') # do not disturb while maintenance
-          # status = discord.Status('online')
+            # status = discord.Status('online')
          )
          try:
             sync_ = await self.core.tree.sync()
