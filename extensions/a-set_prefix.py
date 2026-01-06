@@ -19,7 +19,8 @@ class Prefix(commands.Cog):
    async def set_prefix(
            self,
            ctx,
-           new_prefix: str
+           *,
+           new_prefix: str | None = None,
    ):
       # permisisons
       try:

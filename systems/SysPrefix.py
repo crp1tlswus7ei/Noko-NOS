@@ -2,14 +2,15 @@ import os
 from discord.ext import commands
 from pymongo import MongoClient
 from dotenv import load_dotenv as core_load
+from pymongo.read_concern import DEFAULT_READ_CONCERN
 
 core_load()
 MONGO_URI = os.getenv('MONGO_URI')
 shot = MongoClient(MONGO_URI)
 db = shot["kiko"]
 w_coll = db["prefix"]
-default_prefix = '!',
-aux_prefix = 'core'
+DEFAULT_PREFIX = '!'
+AUX_PREFIX = 'core'
 
 async def get_prefix(
         bot,
@@ -17,20 +18,23 @@ async def get_prefix(
 ):
    if not message.guild:
       command.when_mentioned_or(
-         default_prefix,
-         aux_prefix,
+         DEFAULT_PREFIX,
+         AUX_PREFIX,
       )(
          bot,
          message
       )
 
    data = w_coll.find_one({'_id': message.guild.id})
+   custom_ = None
    if data:
-      user_prefix = data['prefix']
-   else:
-      user_prefix = default_prefix
+      custom_ = data.get('prefix')
 
-   return commands.when_mentioned_or(user_prefix, aux_prefix)(bot, message)
+   prefixes = [DEFAULT_PREFIX, AUX_PREFIX]
+   if custom_:
+      prefixes.insert(0, custom_)
+
+   return commands.when_mentioned_or(*prefixes)(bot, message)
 
 async def update_prefix(
         ctx,
@@ -45,6 +49,6 @@ async def update_prefix(
 async def delete_prefix(ctx):
    w_coll.update_one(
       {"_id": ctx.guild.id},
-      {"$set": {"prefix": default_prefix}},
+      {"$set": {"prefix": None}},
       upsert = True
    )
