@@ -21,7 +21,7 @@ async def logsave_(
    })
 
 async def getlogs_(limit = 10):
-   cursor = logs_coll.find().sort(
+   cursor = w_coll.find().sort(
       'timestamp',
       -1
    ).limit(limit)

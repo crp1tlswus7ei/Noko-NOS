@@ -2,7 +2,6 @@ import os
 from discord.ext import commands
 from pymongo import MongoClient
 from dotenv import load_dotenv as core_load
-from pymongo.read_concern import DEFAULT_READ_CONCERN
 
 core_load()
 MONGO_URI = os.getenv('MONGO_URI')
@@ -17,7 +16,7 @@ async def get_prefix(
         message
 ):
    if not message.guild:
-      command.when_mentioned_or(
+      commands.when_mentioned_or(
          DEFAULT_PREFIX,
          AUX_PREFIX,
       )(

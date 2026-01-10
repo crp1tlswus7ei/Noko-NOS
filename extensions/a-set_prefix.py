@@ -22,7 +22,7 @@ class Prefix(commands.Cog):
            *,
            new_prefix: str | None = None,
    ):
-      # permisisons
+      # permissions
       try:
          if not ctx.author.guild_permissions.administrator:
             await ctx.send(
