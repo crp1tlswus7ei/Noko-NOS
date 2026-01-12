@@ -1,8 +1,6 @@
 import discord
 from discord.ui import View, Button
-
-from misc.Exceptions import intresponse_
-
+from misc.Exceptions import *
 
 class Delete(View):
    def __init__(self):
@@ -15,7 +13,7 @@ class Delete(View):
       delete_button.callback = self.delete_message
       self.add_item(delete_button)
 
-   async def delete_message(
+   async def callback_delete( # ignore warn
            self,
            interaction: discord.Interaction
    ):
