@@ -13,7 +13,7 @@ class Delete(View):
       delete_button.callback = self.delete_message
       self.add_item(delete_button)
 
-   async def callback_delete( # ignore warn
+   async def delete_message( # ignore warn
            self,
            interaction: discord.Interaction
    ):

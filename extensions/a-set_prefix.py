@@ -20,7 +20,7 @@ class Prefix(commands.Cog):
            self,
            ctx,
            *,
-           new_prefix: str | None = None,
+           new_prefix: str | None = None
    ):
       # permissions
       try:

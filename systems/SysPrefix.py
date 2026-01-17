@@ -48,6 +48,6 @@ async def update_prefix(
 async def delete_prefix(ctx):
    w_coll.update_one(
       {"_id": ctx.guild.id},
-      {"$set": {"prefix": None}},
+      {"$set": {"prefix": DEFAULT_PREFIX}},
       upsert = True
    )

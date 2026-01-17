@@ -15,7 +15,7 @@ async def logsave_(
         message: str,
 ):
    w_coll.insert_one({
-      'type': log_type,
+      'type': log_type, # None if not
       'message': message,
       'timestap': datetime.now(),
    })
@@ -26,7 +26,7 @@ async def getlogs_(limit = 10):
       -1
    ).limit(limit)
 
-   return [log async for log in cursor]
+   return [log async for log in cursor] # ignore warn
 
 async def clear_logs():
    w_coll.delete_many({}) # all clean
