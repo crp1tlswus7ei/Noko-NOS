@@ -1,6 +1,6 @@
 import discord # ?
 from discord.ext import commands
-from systems.SysPrefix import get_prefix, update_prefix # ignore weak
+from systems.SysPrefix import get_prefix, getactual_prefix, update_prefix # ignore weak
 from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
@@ -22,6 +22,10 @@ class Prefix(commands.Cog):
            *,
            new_prefix: str | None = None
    ):
+      # misc
+      guild_id = ctx.guild.id
+      actual_prefix = await getactual_prefix(guild_id)
+
       # permissions
       try:
          if not ctx.author.guild_permissions.administrator:
@@ -33,8 +37,7 @@ class Prefix(commands.Cog):
 
          if new_prefix is None:
             await ctx.send(
-               embed = noprefix(ctx),
-               ephemeral = True
+               embed = actualprefix_(ctx, actual_prefix)
             )
             return
 

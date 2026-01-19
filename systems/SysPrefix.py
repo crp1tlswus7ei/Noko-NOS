@@ -35,6 +35,12 @@ async def get_prefix(
 
    return commands.when_mentioned_or(*prefixes)(bot, message)
 
+async def getactual_prefix(guild_id: int):
+   prefix = w_coll.find_one(
+      {'_id': guild_id}
+   )
+   return prefix['prefix']
+
 async def update_prefix(
         ctx,
         new_prefix
@@ -47,7 +53,7 @@ async def update_prefix(
 
 async def delete_prefix(ctx):
    w_coll.update_one(
-      {"_id": ctx.guild.id},
-      {"$set": {"prefix": DEFAULT_PREFIX}},
+      {'_id': ctx.guild.id},
+      {'$set': {'prefix': DEFAULT_PREFIX}},
       upsert = True
    )

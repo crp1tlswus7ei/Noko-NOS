@@ -24,6 +24,15 @@ def setprefix_(
    )
    return embed
 
+def actualprefix_(
+        ctx, # ignore weak warning
+        actual_prefix) -> discord.Embed:
+   embed = discord.Embed(
+      title = f'Actual Prefix: {actual_prefix}',
+      color = discord.Color.light_gray()
+   )
+   return embed
+
 def resetprefix_(ctx) -> discord.Embed:
    embed = discord.Embed(
       title = 'Prefix reset.',
