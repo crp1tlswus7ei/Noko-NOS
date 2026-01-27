@@ -33,35 +33,35 @@ class Ban(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = banys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.ban_members:
+         if not interaction.user.guild_permissions.ban_members: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -78,7 +78,7 @@ class Ban(commands.Cog):
          print(f'a-ban: (permissions); {e}')
          return
 
-      # primary
+      ## primary
       try:
          await user.ban(reason = reason)
          await interaction.response.send_message(
@@ -87,7 +87,7 @@ class Ban(commands.Cog):
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
