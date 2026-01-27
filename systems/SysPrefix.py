@@ -6,8 +6,8 @@ from dotenv import load_dotenv as core_load
 core_load()
 MONGO_URI = os.getenv('MONGO_URI')
 shot = MongoClient(MONGO_URI)
-db = shot["kiko"]
-w_coll = db["prefix"]
+db = shot['kiko']
+w_coll = db['prefix']
 DEFAULT_PREFIX = '!'
 AUX_PREFIX = 'core'
 
@@ -51,7 +51,7 @@ async def update_prefix(
       upsert = True
    )
 
-async def delete_prefix(ctx):
+async def reset_prefix(ctx):
    w_coll.update_one(
       {'_id': ctx.guild.id},
       {'$set': {'prefix': DEFAULT_PREFIX}},

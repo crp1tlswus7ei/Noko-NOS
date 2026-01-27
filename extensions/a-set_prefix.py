@@ -60,14 +60,17 @@ class Prefix(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'z-set_prefix: (permissions); {e}')
+         print(f'a-set_prefix: (permissions); {e}')
          return
 
       # primary
       try:
-         await update_prefix(ctx, new_prefix) # ignore unfilled and weak
+         await update_prefix(ctx, new_prefix)
          await ctx.send(
-            embed = setprefix_(ctx, new_prefix)
+            embed = setprefix_(
+               ctx,
+               new_prefix
+            )
          )
 
       # handler primary
@@ -82,7 +85,7 @@ class Prefix(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'z-set_prefix: (primary); {e}')
+         print(f'a-set_prefix: (primary); {e}')
          return
 
 # Cog

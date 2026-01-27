@@ -40,12 +40,12 @@ class ResetPrefix(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'z-reset_prefix: (permissions); {e}')
+         print(f'a-reset_prefix: (permissions); {e}')
          return
 
       # primary
       try:
-         await delete_prefix(ctx)
+         await reset_prefix(ctx)
          await ctx.send(
             embed = resetprefix_(ctx)
          )
@@ -62,7 +62,7 @@ class ResetPrefix(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'z-reset_prefix: (permissions); {e}')
+         print(f'a-reset_prefix: (permissions); {e}')
 
 # Cog
 async def setup(core):
