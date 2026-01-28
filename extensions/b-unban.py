@@ -31,28 +31,28 @@ class Unban(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user_id:
+         if interaction.user.id == user_id: #
             await interaction.response.send_message(
                embed = unbanys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.ban_members:
+         if not interaction.user.guild_permissions.ban_members: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user_id is None:
+         if user_id is None: #
             await interaction.response.send_message(
                embed = noid_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -69,11 +69,11 @@ class Unban(commands.Cog):
          print(f'a-unban: (permissions); {e}')
          return
 
-      # secondary
+      ## secondary
       try:
          user_id = int(user_id)
 
-      # handler secondary
+      ## handler secondary
       except ValueError:
          await interaction.response.send_message(
             embed = errorid_(interaction),
@@ -86,10 +86,10 @@ class Unban(commands.Cog):
             view = self.docs
          )
       except Exception as e:
-         print(f'a-unban: (secondary); {e}')
+         print(f'b-unban: (secondary); {e}')
          return
 
-      # primary
+      ## primary
       banned_users = interaction.guild.bans()
       try:
          async for ban_entry in banned_users:
@@ -114,7 +114,7 @@ class Unban(commands.Cog):
          )
          return
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -128,7 +128,7 @@ class Unban(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'a-unban (primary); {e}')
+         print(f'b-unban (primary); {e}')
          return
 
 # Cog

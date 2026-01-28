@@ -75,7 +75,7 @@ class Ban(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'a-ban: (permissions); {e}')
+         print(f'b-ban: (permissions); {e}')
          return
 
       ## primary
@@ -101,7 +101,7 @@ class Ban(commands.Cog):
             view = self.interactionb
          )
       except Exception as e:
-         print(f'a-ban: (primary); {e}')
+         print(f'b-ban: (primary); {e}')
          return
 
 # Cog

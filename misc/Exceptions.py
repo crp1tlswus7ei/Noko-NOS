@@ -177,7 +177,7 @@ def notarget_(
 def usrnotfound_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
-      title = 'User not found.',
+      title = 'User not found or not banned.',
       color = discord.Color.light_gray()
    )
    return embed
