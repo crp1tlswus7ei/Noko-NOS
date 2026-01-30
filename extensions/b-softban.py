@@ -33,6 +33,13 @@ class SoftBan(commands.Cog):
    ):
       # permissions
       try:
+         if user == self.core.user: #
+            await interaction.response.send_message(
+               embed = selfban_(interaction),
+               ephemeral = True
+            )
+            return
+
          if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = banys_(interaction),

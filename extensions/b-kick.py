@@ -33,6 +33,13 @@ class Kick(commands.Cog):
    ):
       # permissions
       try:
+         if user == self.core.user: #
+            await interaction.response.send_message(
+               embed = selfkick_(interaction),
+               ephemeral = True
+            )
+            return
+
          if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = kickys_(interaction),
