@@ -27,32 +27,28 @@ class Warnings(commands.Cog):
    async def warnings(
            self,
            interaction: discord.Interaction,
-           user: discord.Member
+           user: discord.Member = None
    ):
       # permissions
+      user = user or interaction.user
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user: #
             await interaction.response.send_message(
-               embed = nocore_(interaction),
+               embed = selfwarns_(interaction),
                ephemeral = True
             )
-            return
 
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.manage_roles: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
-            await interaction.response.send_message(
-               embed = nouser_(interaction),
-               ephemeral = True
-            )
-            return
+         if user is None: # ?
+            pass
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -69,7 +65,7 @@ class Warnings(commands.Cog):
          print(f'c-warnings: (permissions); {e}')
          return
 
-      # primary
+      ## primary
       user_id = str(user.id)
       try:
          user_warns = self.get_warns(user_id) # ignore unfilled
@@ -77,7 +73,8 @@ class Warnings(commands.Cog):
             await interaction.response.send_message(
                embed = warnings_(
                   interaction,
-                  f'{user.display_name} warns:\n' + '\n'.join(user_warns)
+                  title = f'{user.display_name} warns:',
+                  description = '\n' + '\n'.join(user_warns),
                ),
                ephemeral = False,
                view = self.delete
@@ -88,7 +85,7 @@ class Warnings(commands.Cog):
                ephemeral = False
             )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),

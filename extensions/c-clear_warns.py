@@ -35,35 +35,42 @@ class ClearWarns(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user: #
+            await interaction.response.send_message(
+               embed = selfunwarn_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = clearys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.manage_roles: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -80,18 +87,18 @@ class ClearWarns(commands.Cog):
          print(f'c-clear_warns: (permissions); {e}')
          return
 
-      # secondary
+      ## secondary
       user_id = str(user.id)
       warns_ = self.get_warns(user_id) # ignore unfilled
 
-      if not warns_:
+      if not warns_: #
          await interaction.response.send_message(
             embed = nowarns_(interaction, user),
             ephemeral = True
          )
          return
 
-      # primary
+      ## primary
       try:
          self.c_warns(user_id) # ignore unfilled
          await interaction.response.send_message(
@@ -100,7 +107,7 @@ class ClearWarns(commands.Cog):
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),

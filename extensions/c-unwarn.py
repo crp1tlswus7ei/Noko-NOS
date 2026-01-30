@@ -21,7 +21,8 @@ class Unwarn(commands.Cog):
       description = 'Removes only one warn from a user.'
    )
    @app_commands.describe(
-      user = 'User to clean warns.'
+      user = 'User to clean warns.',
+      amount = 'Number of warns to remove: 1 by default.'
    )
    @app_commands.default_permissions(
       manage_roles = True,
@@ -32,39 +33,46 @@ class Unwarn(commands.Cog):
            interaction: discord.Interaction,
            user: discord.Member,
            *,
-           amount: int
+           amount: int = 1
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user: #
+            await interaction.response.send_message(
+               embed = selfunwarn_(interaction),
+               ephemeral = True,
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = clearys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.manage_roles: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if amount is None or amount <= 0:
+         if amount <= 0 or amount >= 10: #
             await interaction.response.send_message(
                embed = noamount_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -81,18 +89,18 @@ class Unwarn(commands.Cog):
          print(f'c-clear_warns: (permissions); {e}')
          return
 
-      # secondary
+      ## secondary
       user_id = str(user.id)
       warns_ = self.get_warns(user_id) # ignore unfilled
 
-      if not warns_:
+      if not warns_: #
          await interaction.response.send_message(
             embed = nowarns_(interaction, user),
             ephemeral = True
          )
          return
 
-      # primary
+      ## primary
       try:
          if 1 <= amount <= len(warns_):
             self.remove_warn(user_id, amount - 1) # ignore unfilled
@@ -107,7 +115,7 @@ class Unwarn(commands.Cog):
                ephemeral = False
             )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),

@@ -7,7 +7,7 @@ from misc.Messages import *
 
 class Warn(commands.Cog):
    from systems.SysWarn import (
-      get_warns, # ignore weak warning
+      get_warns, # ignore warning
       add_warns
    )
    def __init__(self, core):
@@ -38,35 +38,42 @@ class Warn(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user: #
+            await interaction.response.send_message(
+               embed = selfwarn_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = warnys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.manage_roles: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -83,7 +90,7 @@ class Warn(commands.Cog):
          print(f'c-warn: (permissions); {e}')
          return
 
-      # primary
+      ## primary
       user_id = str(user.id)
       try:
          total_warns = self.add_warns(user_id, reason = reason) # ignore unfilled
@@ -93,7 +100,7 @@ class Warn(commands.Cog):
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
