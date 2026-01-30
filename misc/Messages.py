@@ -206,9 +206,11 @@ def warnys_(
 # Warnings message list
 def warnings_(
         interaction: discord.Interaction,
-        title: str) -> discord.Embed:
+        title: str,
+        description: str) -> discord.Embed:
    embed = discord.Embed(
       title = title,
+      description = description,
       color = discord.Color.light_gray() # change to primary color
    )
    embed.set_footer(

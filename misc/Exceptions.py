@@ -113,6 +113,50 @@ def corerror_(
    )
    return embed
 
+# all self exceptions
+def selfban_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = "You can't ban me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
+def selfkick_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = "You can't kick me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
+def selfwarn_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = "You can't warn me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
+def selfunwarn_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = "You can't unwarn me.",
+      color = discord.Color.dark_red()
+   )
+   embed.set_footer(
+      text = 'No warn to remove.'
+   )
+   return embed
+
+def selfwarns_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Suomi has no warns.',
+      color = discord.Color.light_gray()
+   )
+   return embed
+
 # all id exceptions
 def noid_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
@@ -189,7 +233,7 @@ def noamount_(
       color = discord.Color.light_gray()
    )
    embed.set_footer(
-      text = 'The amount must be greater than 0.',
+      text = 'The amount must be greater than 0 or less than 10.',
    )
    return embed
 
