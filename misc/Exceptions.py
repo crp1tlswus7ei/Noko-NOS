@@ -157,6 +157,22 @@ def selfwarns_(
    )
    return embed
 
+def selfmute_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = "You can't mute me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
+def selfunmute_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = "You can't unmute me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
 # all id exceptions
 def noid_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
@@ -265,25 +281,25 @@ def roletop_(
    return embed
 
 # create role messages
-def authmrole_(
+def nohardmuterole_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
-      title = 'Hard Mute role not found and was automatically created.',
-      color = discord.Color.light_gray()
+      title = 'Hard Mute role not found.',
+      color = discord.Color.orange()
    )
    embed.set_footer(
-      text = 'Check documentation for more information.'
+      text = 'Execute `set_mute` to configure Mute roles.'
    )
    return embed
 
-def autmrole_(
+def nomuterole_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
-      title = 'Mute role not found and was automatically created.',
-      color = discord.Color.light_gray()
+      title = 'Mute role not found.',
+      color = discord.Color.orange()
    )
    embed.set_footer(
-      text = 'Check documentation for more information.'
+      text = 'Execute `set_mute` to configure Mute roles.'
    )
    return embed
 

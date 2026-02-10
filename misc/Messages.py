@@ -250,6 +250,20 @@ def hardmuteys_(
    )
    return embed
 
+def chardmuterole_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Hard Mute Role created:',
+      description = '''
+      **Name:** Hard Mute\n
+      **Permissions:** `66560`\n
+      **Color:** `992D22`'''
+   )
+   embed.set_footer(
+      text = f'HardMute role set by: {interaction.user.display_name}',
+      icon_url = interaction.user.avatar
+   )
+
 def alrmute_(
         interaction: discord.Interaction, # ignore weak warning
         user: discord.Member) -> discord.Embed:
@@ -272,6 +286,20 @@ def mute_(
       icon_url = interaction.user.avatar
    )
    return embed
+
+def cmuterole_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Mute Role created:',
+      description = '''
+      **Name:** Mute\n
+      **Permissions:** `66560`\n
+      **Color:** `992D22`'''
+   )
+   embed.set_footer(
+      text = f'Mute role set by: {interaction.user.display_name}',
+      icon_url = interaction.user.avatar
+   )
 
 # Unmute messages
 def unmute_(
