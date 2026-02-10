@@ -1,145 +1,55 @@
 import discord
 
-async def CreateSpamRole(guild): # ignore weak warning
+async def CreateSpamRole(guild):
    await guild.create_role(
       name = 'Mute',
       permissions = discord.Permissions(4296082432),
-      colour = discord.Colour.light_gray(), # change color
+      colour = discord.Colour.dark_red(),
       hoist = False,
       mentionable = False,
       reason = 'Spam Role.'
    )
 
-async def CreateMuteRole(interaction: discord.Interaction): # ignore weak warning
-   await interaction.guild.create_role(
+async def CreateMuteRole(self, interaction: discord.Interaction): # ignore weak warning
+   guild = interaction.guild
+   top_ = guild.me.top_role
+   muterole = await interaction.guild.create_role(
       name = 'Mute',
-      permissions = discord.Permissions(4296082432),
-      colour = discord.Color.light_gray(), # change color
+      permissions = discord.Permissions(66560),
+      colour = discord.Color.dark_red(),
       hoist = False,
       mentionable = False,
       reason = 'Mute role (keep all roles).'
    )
+   await muterole.edit(position = top_.position - 1)
 
-async def CreateHardMuteRole(interaction: discord.Interaction): # ignore weak warning
-   await interaction.guild.create_role(
+async def CreateHardMuteRole(self, interaction: discord.Interaction): # ignore weak warning
+   guild = interaction.guild
+   top_ = guild.me.top_role
+   hardmuterole = await interaction.guild.create_role(
       name = 'Hard Mute',
-      permissions = discord.Permissions(4296082432),
-      colour = discord.Colour.light_gray(), # chage color
+      permissions = discord.Permissions(66560),
+      colour = discord.Colour.dark_red(),
       hoist = False,
       mentionable = False,
       reason = 'Hard mute role (remove all roles).'
    )
+   await hardmuterole.edit(position = top_.position - 1)
 
 m_over = discord.PermissionOverwrite(
+   # text
+   send_messages = False,
    add_reactions = False,
-   administrator = False,
-   attach_files = False,
-   ban_members = False,
-   change_nickname = False,
-   connect = False,
-   create_events = False,
-   create_expressions = False,
-   create_instant_invite = False,
-   create_polls = False,
-   create_private_threads = False,
    create_public_threads = False,
-   deafen_members = False,
-   embed_links = False,
-   external_emojis = False,
-   kick_members = False,
-   manage_channels = False,
-   manage_emojis = False,
-   manage_emojis_and_stickers = False,
-   manage_events = False,
-   manage_expressions = False,
-   manage_guild = False,
-   manage_messages = False,
-   manage_nicknames = False,
-   manage_permissions = False,
-   manage_roles = False,
-   manage_threads = False,
-   manage_webhooks = False,
-   mention_everyone = False,
-   moderate_members = False,
-   move_members = False,
-   mute_members = False,
-   read_message_history = True, #
-   read_messages = True, #
-   request_to_speak = False,
-   send_messages = True, #
-   send_messages_in_threads = False,
-   send_polls = False,
-   send_tts_messages = False,
-   send_voice_messages = False,
-   speak = True, #
-   stream = True, #
-   use_application_commands = False,
-   use_embedded_activities = True, #
-   use_external_apps = False,
-   use_external_emojis = False,
-   use_external_sounds = False,
-   use_external_stickers = False,
-   use_soundboard = False,
-   use_voice_activation = True, #
-   view_audit_log = False,
-   view_channel = True, #
-   view_guild_insights = False
-)
-
-hm_over = discord.PermissionOverwrite(
-   add_reactions = False,
-   administrator = False,
-   attach_files = False,
-   ban_members = False,
-   change_nickname = False,
-   connect = False,
-   create_events = False,
-   create_expressions = False,
-   create_instant_invite = False,
-   create_polls = False,
    create_private_threads = False,
-   create_public_threads = False,
-   deafen_members = False,
-   embed_links = False,
-   external_emojis = False,
-   kick_members = False,
-   manage_channels = False,
-   manage_emojis = False,
-   manage_emojis_and_stickers = False,
-   manage_events = False,
-   manage_expressions = False,
-   manage_guild = False,
-   manage_messages = False,
-   manage_nicknames = False,
-   manage_permissions = False,
-   manage_roles = False,
-   manage_threads = False,
-   manage_webhooks = False,
-   mention_everyone = False,
-   moderate_members = False,
-   move_members = False,
-   mute_members = False,
-   read_message_history = True, #
-   read_messages = True, #
-   request_to_speak = False,
-   send_messages = True, #
    send_messages_in_threads = False,
-   send_polls = False,
-   send_tts_messages = False,
-   send_voice_messages = False,
-   speak = True, #
-   stream = True, #
-   use_application_commands = False,
-   use_embedded_activities = True, #
-   use_external_apps = False,
-   use_external_emojis = False,
-   use_external_sounds = False,
-   use_external_stickers = False,
-   use_soundboard = False,
-   use_voice_activation = True, #
-   view_audit_log = False,
-   view_channel = True, #
-   view_guild_insights = False
+   embed_links = False,
+   attach_files = False,
+   # vc
+   speak = False,
+   connect = False,
+   stream = False,
+   use_voice_activation = False
 )
 
 f_overLockdown = discord.PermissionOverwrite(
