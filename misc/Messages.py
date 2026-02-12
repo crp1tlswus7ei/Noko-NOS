@@ -228,6 +228,39 @@ def nowarnings_ (
    )
    return embed
 
+# setmute messages
+def settingmr_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Set Mute: Caution',
+      color = discord.Color.light_gray()
+   )
+   embed.set_footer(
+      text = 'This will eliminate the old roles and create new ones \n'
+             'with the Suomi configurations.'
+   )
+   return embed
+
+def stinprocess_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Set Mute: In progress...',
+      color = discord.Color.light_gray()
+   )
+   return embed
+
+def stdone_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Set Mute: Done',
+      color = discord.Color.light_gray()
+   )
+   embed.set_footer(
+      text = 'Mute and Hard Mute roles have been created and\n'
+             'permissions have been applied.'
+   )
+   return embed
+
 # Hardmute messages
 def hardmute_(
         interaction: discord.Interaction,
@@ -249,20 +282,6 @@ def hardmuteys_(
       color = discord.Color.light_gray()
    )
    return embed
-
-def chardmuterole_(
-        interaction: discord.Interaction) -> discord.Embed:
-   embed = discord.Embed(
-      title = 'Hard Mute Role created:',
-      description = '''
-      **Name:** Hard Mute\n
-      **Permissions:** `66560`\n
-      **Color:** `992D22`'''
-   )
-   embed.set_footer(
-      text = f'HardMute role set by: {interaction.user.display_name}',
-      icon_url = interaction.user.avatar
-   )
 
 def alrmute_(
         interaction: discord.Interaction, # ignore weak warning
@@ -286,20 +305,6 @@ def mute_(
       icon_url = interaction.user.avatar
    )
    return embed
-
-def cmuterole_(
-        interaction: discord.Interaction) -> discord.Embed:
-   embed = discord.Embed(
-      title = 'Mute Role created:',
-      description = '''
-      **Name:** Mute\n
-      **Permissions:** `66560`\n
-      **Color:** `992D22`'''
-   )
-   embed.set_footer(
-      text = f'Mute role set by: {interaction.user.display_name}',
-      icon_url = interaction.user.avatar
-   )
 
 # Unmute messages
 def unmute_(
