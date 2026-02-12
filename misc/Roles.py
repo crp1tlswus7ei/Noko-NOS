@@ -1,19 +1,15 @@
 import discord
 
-async def CreateSpamRole(guild):
-   await guild.create_role(
-      name = 'Mute',
-      permissions = discord.Permissions(4296082432),
-      colour = discord.Colour.dark_red(),
-      hoist = False,
-      mentionable = False,
-      reason = 'Spam Role.'
-   )
+f_overLockdown = discord.PermissionOverwrite(send_messages = False)
+f_overUnlock = discord.PermissionOverwrite(send_messages = True)
 
-async def CreateMuteRole(self, interaction: discord.Interaction): # ignore weak warning
+# Roles (hard and mute)
+async def CreateMuteRole(
+        self, # ignore weak
+        interaction: discord.Interaction
+):
    guild = interaction.guild
-   top_ = guild.me.top_role
-   muterole = await interaction.guild.create_role(
+   mr = await interaction.guild.create_role(
       name = 'Mute',
       permissions = discord.Permissions(66560),
       colour = discord.Color.dark_red(),
@@ -21,20 +17,20 @@ async def CreateMuteRole(self, interaction: discord.Interaction): # ignore weak 
       mentionable = False,
       reason = 'Mute role (keep all roles).'
    )
-   await muterole.edit(position = top_.position - 1)
 
-async def CreateHardMuteRole(self, interaction: discord.Interaction): # ignore weak warning
+async def CreateHardMuteRole(
+        self, # ignore weak
+        interaction: discord.Interaction
+):
    guild = interaction.guild
-   top_ = guild.me.top_role
-   hardmuterole = await interaction.guild.create_role(
+   hmr = await interaction.guild.create_role(
       name = 'Hard Mute',
       permissions = discord.Permissions(66560),
-      colour = discord.Colour.dark_red(),
+      colour = discord.Color.dark_red(),
       hoist = False,
       mentionable = False,
       reason = 'Hard mute role (remove all roles).'
    )
-   await hardmuterole.edit(position = top_.position - 1)
 
 m_over = discord.PermissionOverwrite(
    # text
@@ -50,12 +46,4 @@ m_over = discord.PermissionOverwrite(
    connect = False,
    stream = False,
    use_voice_activation = False
-)
-
-f_overLockdown = discord.PermissionOverwrite(
-   send_messages = False
-)
-
-f_overUnlock = discord.PermissionOverwrite(
-   send_messages = True
 )
