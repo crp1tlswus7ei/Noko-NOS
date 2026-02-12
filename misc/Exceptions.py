@@ -280,26 +280,28 @@ def roletop_(
    )
    return embed
 
-# create role messages
-def nohardmuterole_(
-        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
-   embed = discord.Embed(
-      title = 'Hard Mute role not found.',
-      color = discord.Color.orange()
-   )
-   embed.set_footer(
-      text = 'Execute `set_mute` to configure Mute roles.'
-   )
-   return embed
-
+# create role exceptions
 def nomuterole_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
-      title = 'Mute role not found.',
+      title = 'Mute or Hard Mute roles not found.',
       color = discord.Color.orange()
    )
    embed.set_footer(
-      text = 'Execute `set_mute` to configure Mute roles.'
+      text = 'Execute "set_mute" to configure Mute roles.'
+   )
+   return embed
+
+# set mute exceptions
+def setmcancel_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Set Mute: Operation Canceled.',
+      color = discord.Color.dark_orange()
+   )
+   embed.set_footer(
+      text = 'No new roles have been created, or have any\n'
+             'been modified.'
    )
    return embed
 
