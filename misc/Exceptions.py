@@ -139,7 +139,7 @@ def selfwarn_(
    return embed
 
 def selfunwarn_(
-        interaction: discord.Interaction) -> discord.Embed:
+        interaction: discord.Interaction) -> discord.Embed: # Ignore weak warning
    embed = discord.Embed(
       title = "You can't unwarn me.",
       color = discord.Color.dark_red()
@@ -150,7 +150,7 @@ def selfunwarn_(
    return embed
 
 def selfwarns_(
-        interaction: discord.Interaction) -> discord.Embed:
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Suomi has no warns.',
       color = discord.Color.light_gray()
@@ -158,7 +158,7 @@ def selfwarns_(
    return embed
 
 def selfmute_(
-        interaction: discord.Interaction) -> discord.Embed:
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = "You can't mute me.",
       color = discord.Color.dark_red()
@@ -166,9 +166,25 @@ def selfmute_(
    return embed
 
 def selfunmute_(
-        interaction: discord.Interaction) -> discord.Embed:
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = "You can't unmute me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
+def selftimeout_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = "You can't timeout me.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
+def selfuntimeout_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = "You can't untimeout me.",
       color = discord.Color.dark_red()
    )
    return embed
@@ -260,7 +276,7 @@ def noduration_(
       color = discord.Color.light_gray()
    )
    embed.set_footer(
-      text = 'Duration must be greater than 0.'
+      text = 'Duration must be greater than 0 or less than 10080 minutes.'
    )
    return embed
 
