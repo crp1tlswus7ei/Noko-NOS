@@ -6,10 +6,6 @@ from misc.Exceptions import *
 from misc.Messages import *
 
 class Mute(commands.Cog):
-   from misc.Roles import (
-      CreateMuteRole,
-      m_over
-   )
    def __init__(self, core):
       self.core = core
       self.delete = Delete()
@@ -18,7 +14,7 @@ class Mute(commands.Cog):
 
    @app_commands.command(
       name = 'mute',
-      description = 'Mutes a user indefinitely',
+      description = 'Mutes a user indefinitely.',
       nsfw = False
    )
    @app_commands.describe(
@@ -38,35 +34,42 @@ class Mute(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user:
+            await interaction.response.send_message(
+               embed = selfmute_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = hardmuteys_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.guild_permissions.manage_roles:
+         if not interaction.user.guild_permissions.manage_roles: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -93,67 +96,21 @@ class Mute(commands.Cog):
          name = 'Hard Mute'
       )
 
-      if hm_r in user.roles:
+      if hm_r in user.roles: #
          await interaction.response.send_message(
             embed = alrmute_(interaction, user),
             ephemeral = True
          )
          return
 
-      # MuteRole
-      if not m_r:
-         try:
-            await self.CreateMuteRole(interaction)
-            m_r = discord.utils.get(
-               interaction.guild.roles, # re
-               name = 'Mute'
-            )
-            await interaction.response.send_message(
-               embed = autmrole_(interaction),
-               ephemeral = True
-            )
-            # Channel permissions
-            for channel in interaction.guild.channels:
-               try:
-                  await channel.set_permissions(
-                     target = m_r,
-                     overwrite = self.m_over
-                  )
-               # handler channel
-               except discord.Forbidden:
-                  await interaction.response.send_message(
-                     embed = channelerror_(interaction),
-                     ephemeral = True,
-                     view = self.docs
-                  )
-               except discord.InteractionResponded:
-                  await interaction.response.send_message(
-                     embed = corexcepctions(interaction),
-                     ephemeral = True,
-                     view = self.interactionb
-                  )
-               except Exception as e:
-                  print(f'd-mute: (ChannelPermissions): {e}')
-                  return
+      if not m_r: #
+         await interaction.response.send_message(
+            embed = nomuterole_(interaction),
+            ephemeral = True
+         )
+         return
 
-         # handler MuteRole
-         except discord.Forbidden:
-            await interaction.response.send_message(
-               embed = corexcepctions(interaction),
-               ephemeral = True,
-               view = self.docs
-            )
-         except discord.InteractionResponded:
-            await interaction.response.send_message(
-               embed = corexcepctions(interaction),
-               ephemeral = True,
-               view = self.interactionb
-            )
-         except Exception as e:
-            print(f'd-mute: (MuteRole); {e}')
-            return
-
-      # primary
+      ## primary
       try:
          if m_r not in user.roles:
             await user.add_roles(m_r, reason = reason)
@@ -169,7 +126,7 @@ class Mute(commands.Cog):
             )
             return
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
