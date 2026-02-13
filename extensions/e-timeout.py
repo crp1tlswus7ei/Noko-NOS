@@ -20,7 +20,7 @@ class Timeout(commands.Cog):
    )
    @app_commands.describe(
       user = 'User to be santioned.',
-      duration = 'Minutes of sanction.',
+      duration = 'Minutes of sanction, 10 minutes by default.',
       reason = 'Reason for sanction.',
    )
    @app_commands.default_permissions(
@@ -31,48 +31,55 @@ class Timeout(commands.Cog):
            self,
            interaction: discord.Interaction,
            user: discord.Member,
-           duration: int,
+           duration: int = 10,
            *,
            reason: str
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user:
+            await interaction.response.send_message(
+               embed = selftimeout_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = hardmuteys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.mute_members:
+         if not interaction.user.guild_permissions.mute_members: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if duration is None or duration <= 0:
+         if duration <= 0 or duration >= 10080:
             await interaction.response.send_message(
                embed = noduration_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -89,7 +96,7 @@ class Timeout(commands.Cog):
          print(f'e-timeout: (permissions); {e}')
          return
 
-      # primary
+      ## primary
       try:
          await user.timeout(
             timedelta(minutes = duration),
@@ -101,7 +108,7 @@ class Timeout(commands.Cog):
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
