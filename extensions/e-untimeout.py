@@ -34,35 +34,42 @@ class Untimeout(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user:
+            await interaction.response.send_message(
+               embed = selfuntimeout_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = unmuteys_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.guild_permissions.mute_members:
+         if not interaction.user.guild_permissions.mute_members: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -79,19 +86,19 @@ class Untimeout(commands.Cog):
          print(f'e-un_timeout: (permissions); {e}')
          return
 
-      # primary
+      ## primary
       try:
          await user.timeout(
             None,
             reason = reason
          )
-         await interaction.responses.send_message(
+         await interaction.response.send_message(
             embed = untimeout_(interaction, user),
             ephemeral = False,
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
