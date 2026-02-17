@@ -310,7 +310,7 @@ def nomuterole_(
 
 # set mute exceptions
 def setmcancel_(
-        interaction: discord.Interaction) -> discord.Embed:
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
       title = 'Set Mute: Operation Canceled.',
       color = discord.Color.dark_orange()
@@ -318,6 +318,15 @@ def setmcancel_(
    embed.set_footer(
       text = 'No new roles have been created, or have any\n'
              'been modified.'
+   )
+   return embed
+
+# advice exceptions
+def menuexception_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = 'This menu was no created for you.',
+      color = discord.Color.light_gray()
    )
    return embed
 
