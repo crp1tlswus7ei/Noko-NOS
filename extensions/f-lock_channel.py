@@ -19,7 +19,7 @@ class LockC(commands.Cog):
       nsfw = False
    )
    @app_commands.describe(
-      channel = 'Channel to lock messages.'
+      channel = 'Channel to lock messages, actual channel by default.'
    )
    @app_commands.default_permissions(
       administrator = True
@@ -27,12 +27,12 @@ class LockC(commands.Cog):
    async def lock_channel(
            self,
            interaction: discord.Interaction,
-           user: discord.Member,
+           *,
            channel: discord.TextChannel = None
    ):
       # permissions
       try:
-         if not interaction.user.guild_permissions.administrator:
+         if not interaction.user.guild_permissions.administrator: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
@@ -42,7 +42,7 @@ class LockC(commands.Cog):
          if channel is None:
             pass
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -60,9 +60,10 @@ class LockC(commands.Cog):
          return
 
       # re channel
+      user = interaction.user
       channel = channel or interaction.channel # Actual channel
 
-      # primary
+      ## primary
       try:
          await channel.set_permissions(
             interaction.guild.default_role, # everyone
@@ -74,7 +75,7 @@ class LockC(commands.Cog):
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
