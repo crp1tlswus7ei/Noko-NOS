@@ -1,5 +1,7 @@
 import discord # ?
+from discord import app_commands
 from discord.ext import commands
+from misc.Buttons import *
 from misc.Exceptions import *
 from misc.Messages import *
 
@@ -11,24 +13,28 @@ class Clear(commands.Cog):
       name = 'clear',
       nsfw = False
    )
+   @app_commands.describe(
+      amount = 'Amount of messages to clear, 10 by default.',
+   )
    async def clear(
            self,
            ctx,
-         # user: discord.Member,
            *,
-           amount: int
+           amount: int = 10
    ):
       # permissions
       try:
          if not ctx.author.guild_permissions.manage_messages:
             await ctx.send(
-               embed = noperms(ctx)
+               embed = noperms(ctx),
+               ephemeral = True
             )
             return
 
-         if amount is None or amount <= 0:
+         if amount <= 0 or amount >= 9999:
             await ctx.send(
-               embed = noamount(ctx)
+               embed = noamount(ctx),
+               ephemeral = True
             )
             return
 
@@ -42,12 +48,19 @@ class Clear(commands.Cog):
          return
 
       # primary
+      delete_ = DeleteCtx(ctx.author)
       try:
-         await ctx.channel.purge(
+         deleted = await ctx.channel.purge(
             limit = amount
          )
+         real_deleted = len(deleted)
+
          await ctx.send(
-            embed = clear(ctx, amount)
+            embed = clear(
+               ctx,
+               amount = real_deleted
+            ),
+            view = delete_
          )
 
       # handler primary
