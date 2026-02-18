@@ -34,7 +34,7 @@ def noamount(ctx) -> discord.Embed: # ignore weak warning
       color = discord.Color.light_gray()
    )
    embed.set_footer(
-      text = 'The amount must be greater than 0.'
+      text = 'The amount must be greater than 0 or less than 10k.'
    )
    return embed
 
