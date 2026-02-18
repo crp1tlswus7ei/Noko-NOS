@@ -1,5 +1,4 @@
-import discord
-from discord.ui import View, Button
+import discord # ?
 from misc.Exceptions import *
 
 # advice
@@ -9,9 +8,23 @@ class Advice(discord.ui.View):
            interaction: discord.Interaction
    ):
       super().__init__(timeout = 49)
+      self.author_ = interaction.user.id
       self.interaction = interaction
       self.confirmed = False
 
+   async def interaction_check(
+           self,
+           interaction: discord.Interaction) -> bool:
+
+      if interaction.user.id != self.author_:
+         await interaction.response.send_message(
+            embed = menuexception_(interaction),
+            ephemeral = True
+         )
+         return False
+      return True
+
+   # Accept
    @discord.ui.button(
       emoji = '<:white_check:1470874033863262220>',
       style = discord.ButtonStyle.green,
@@ -25,6 +38,7 @@ class Advice(discord.ui.View):
       await interaction.response.defer()
       self.stop()
 
+   # Denied
    @discord.ui.button(
       emoji = '<:white_cross:1405656979266867210>',
       style = discord.ButtonStyle.red
@@ -37,37 +51,35 @@ class Advice(discord.ui.View):
       await interaction.response.defer()
       self.stop()
 
-# delete/dimiss
-class Delete(View):
+# delete
+class Delete(discord.ui.View):
    def __init__(self):
       super().__init__(timeout = 49)
 
-      delete_button = Button(
-         emoji = '<:white_cross:1405656979266867210>',
-         style = discord.ButtonStyle.danger, # ignore warn
-      )
-      delete_button.callback = self.delete_message
-      self.add_item(delete_button)
-
-   async def delete_message( # ignore warn
+   @discord.ui.button(
+      emoji = '<:white_cross:1405656979266867210>',
+      style = discord.ButtonStyle.red
+   )
+   async def delete_(
            self,
-           interaction: discord.Interaction
+           interaction: discord.Interaction,
+           button: discord.Button
    ):
       if interaction.user != interaction.message.interaction.user:
          await interaction.response.send_message(
-            embed = intresponse_(interaction),
+            embed = menuexception_(interaction),
             ephemeral = True
          )
          return
 
-      # primary
       await interaction.response.defer()
       await interaction.message.delete()
+      self.stop()
 
 # Docs
 class Forbidden(discord.ui.View):
    def __init__(self):
-      super().__init__()
+      super().__init__(timeout = None)
       self.add_item(
          discord.ui.Button(
             label = 'Documentation',
@@ -77,7 +89,7 @@ class Forbidden(discord.ui.View):
 
 class InteractionB(discord.ui.View):
    def __init__(self):
-      super().__init__()
+      super().__init__(timeout = None)
       self.add_item(
          discord.ui.Button(
             label = 'Documentation',
