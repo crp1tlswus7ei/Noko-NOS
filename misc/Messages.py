@@ -412,6 +412,16 @@ def clear_( # interaction
    )
    return embed
 
+def loadingclear(ctx) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Deleting messages...',
+      color = discord.Color.light_gray()
+   )
+   embed.set_footer(
+      text = 'This might take a few minutes.',
+   )
+   return embed
+
 def clear( # context
         ctx,
         amount: int) -> discord.Embed:
