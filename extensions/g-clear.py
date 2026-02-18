@@ -1,4 +1,5 @@
 import discord # ?
+import asyncio
 from discord import app_commands
 from discord.ext import commands
 from misc.Buttons import *
@@ -24,14 +25,14 @@ class Clear(commands.Cog):
    ):
       # permissions
       try:
-         if not ctx.author.guild_permissions.manage_messages:
+         if not ctx.author.guild_permissions.manage_messages: #
             await ctx.send(
                embed = noperms(ctx),
                ephemeral = True
             )
             return
 
-         if amount <= 0 or amount >= 9999:
+         if amount <= 0 or amount >= 9999: #
             await ctx.send(
                embed = noamount(ctx),
                ephemeral = True
@@ -47,6 +48,19 @@ class Clear(commands.Cog):
          print(f'x-clear: (permissions); {e}')
          return
 
+      # loading
+      if ctx.interaction:
+         await ctx.interaction.response.defer(
+            thinking = True,
+            ephemeral = True
+         )
+
+      msg = await ctx.send(
+         embed = loadingclear(ctx),
+         ephemeral = True
+      )
+      await asyncio.sleep(2)
+
       # primary
       delete_ = DeleteCtx(ctx.author)
       try:
@@ -55,13 +69,21 @@ class Clear(commands.Cog):
          )
          real_deleted = len(deleted)
 
-         await ctx.send(
-            embed = clear(
-               ctx,
-               amount = real_deleted
-            ),
-            view = delete_
-         )
+         if ctx.interaction:
+            await msg.edit(
+               embed = clear(
+                  ctx,
+                  amount = real_deleted
+               )
+            )
+         else:
+            await ctx.send(
+               embed = clear(
+                  ctx,
+                  amount = real_deleted
+               ),
+               view = delete_
+            )
 
       # handler primary
       except discord.Forbidden:
