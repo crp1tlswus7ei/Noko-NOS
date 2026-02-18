@@ -76,6 +76,35 @@ class Delete(discord.ui.View):
       await interaction.message.delete()
       self.stop()
 
+# delete ctx
+class DeleteCtx(discord.ui.View):
+   def __init__(
+           self,
+           author: discord.User
+   ):
+      super().__init__(timeout = 49)
+      self.author = author
+
+   @discord.ui.button(
+      emoji = '<:white_cross:1405656979266867210>',
+      style = discord.ButtonStyle.red
+   )
+   async def deletectx_(
+           self,
+           interaction: discord.Interaction,
+           button: discord.Button
+   ):
+      if interaction.user != self.author:
+         await interaction.response.send_message(
+            embed = menuexception_(interaction),
+            ephemeral = True
+         )
+         return
+
+      await interaction.response.defer()
+      await interaction.message.delete()
+      self.stop()
+
 # Docs
 class Forbidden(discord.ui.View):
    def __init__(self):
