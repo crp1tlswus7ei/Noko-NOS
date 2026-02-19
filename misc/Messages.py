@@ -449,6 +449,18 @@ def purge_(
    )
    return embed
 
+def loadingpurge_(
+        interaction: discord.Interaction,
+        user: discord.Member) -> discord.Embed:
+   embed = discord.Embed(
+      title = f"Deleting {user.display_name} messages...",
+      color = discord.Color.light_gray()
+   )
+   embed.set_footer(
+      text = 'This might take a few minutes.',
+   )
+   return embed
+
 def purgeys_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
