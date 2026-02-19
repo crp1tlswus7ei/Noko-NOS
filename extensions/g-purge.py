@@ -30,35 +30,42 @@ class Purge(commands.Cog):
    ):
       # permissions
       try:
-         if interaction.user.id == user.id:
+         if user == self.core.user: #
+            await interaction.response.send_message(
+               embed = selfpurge_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if interaction.user.id == user.id: #
             await interaction.response.send_message(
                embed = purgeys_(interaction),
                ephemeral = True
             )
             return
 
-         if not interaction.user.guild_permissions.manage_messages:
+         if not interaction.user.guild_permissions.manage_messages: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if user is None:
+         if user is None: #
             await interaction.response.send_message(
                embed = nouser_(interaction),
                ephemeral = True
             )
             return
 
-         if interaction.user.top_role <= user.top_role:
+         if interaction.user.top_role <= user.top_role: #
             await interaction.response.send_message(
                embed = usrtop_(interaction),
                ephemeral = True
             )
             return
 
-      # handler permissions
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -75,27 +82,27 @@ class Purge(commands.Cog):
          print(f'x-purge: (permissions); {e}')
          return
 
-      # secondary
+      ## secondary
       def check_usr(msg):
          return msg.author.id == user.id
 
       # defer for primary
-      await interaction.response.defer(
+      await interaction.response.send_message(
+         embed = loadingpurge_(interaction, user),
          ephemeral = True
       )
 
-      # primary
+      ## primary
       try:
          await interaction.channel.purge(
             limit = 7049,
             check = check_usr,
          )
-         await interaction.followup.send(
-            embed = purge_(interaction, user),
-            ephemeral = True, # Cannot False
+         await interaction.edit_original_response(
+            embed = purge_(interaction, user)
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
          await interaction.followup.send(
             embed = corexcepctions(interaction),
