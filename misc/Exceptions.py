@@ -189,6 +189,14 @@ def selfuntimeout_(
    )
    return embed
 
+def selfpurge_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = "You can't delete my messages.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
 # all id exceptions
 def noid_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
