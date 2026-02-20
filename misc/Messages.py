@@ -469,6 +469,18 @@ def purgeys_(
    )
    return embed
 
+# clonerole messages
+def loadingclone_(
+        interaction: discord.Interaction) -> discord.Embed:
+   embed = discord.Embed(
+      title = 'Clone Role: In process...',
+      color = discord.Color.light_gray()
+   )
+   embed.set_footer(
+      text = 'This might take a few seconds.',
+   )
+   return embed
+
 # massrole messages
 def inprocessrole_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
