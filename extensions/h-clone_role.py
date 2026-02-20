@@ -1,4 +1,5 @@
 import discord # ?
+import asyncio
 from discord import app_commands
 from discord.ext import commands
 from misc.Buttons import *
@@ -31,28 +32,35 @@ class CloneR(commands.Cog):
    ):
       # permissions
       try:
-         if not interaction.user.guild_permissions.administrator:
+         if not interaction.user.guild_permissions.administrator: #
             await interaction.response.send_message(
                embed = noperms_(interaction),
                ephemeral = True
             )
             return
 
-         if role is None:
-            await interaction.response.send_message(
-               embed = norole_(interaction),
-               ephemeral = True
-            )
-            return
-
-         if role >= interaction.user.top_role and interaction.user:
+         if role >= interaction.user.top_role and interaction.user: #
              await interaction.response.send_message(
                  embed = roletop_(interaction),
                  ephemeral = True
              )
              return
 
-      # handler permissions
+         if role == interaction.guild.me.top_role: #
+            await interaction.response.send_message(
+               embed = rolecore_(interaction),
+               ephemeral = True
+            )
+            return
+
+         if role == interaction.guild.default_role: #
+            await interaction.response.send_message(
+               embed = defaultclone_(interaction),
+               ephemeral = True
+            )
+            return
+
+      ## handler permissions
       except discord.Forbidden:
          await interaction.response.send_message(
             embed = corexcepctions(interaction),
@@ -69,7 +77,13 @@ class CloneR(commands.Cog):
          print(f'g-clone_role: (permissions); {e}')
          return
 
-      # primary
+      # defer
+      await interaction.response.send_message(
+         embed = loadingclone_(interaction),
+         ephemeral = False
+      )
+
+      ## primary
       try:
          cloner_ = await interaction.guild.create_role(
             name = f'{role.name} (clone)',
@@ -80,7 +94,7 @@ class CloneR(commands.Cog):
             reason = f'Role cloned by: {interaction.user.display_name}'
          )
 
-         # set
+         # hierarchy
          await cloner_.edit(
             position = role.position - 1
          )
@@ -91,24 +105,24 @@ class CloneR(commands.Cog):
             f'Clone: {role.name}'
          )
          clone_.set_footer(
-            text = f'Clone by {interaction.user.display_name}',
+            text = f'Clone by: {interaction.user.display_name}',
             icon_url = interaction.user.avatar
          )
-         await interaction.response.send_message(
+         await asyncio.sleep(2)
+         await interaction.edit_original_response(
             embed = clone_,
-            ephemeral = False,
             view = self.delete
          )
 
-      # handler primary
+      ## handler primary
       except discord.Forbidden:
-         await interaction.response.send_message(
+         await interaction.followup.send(
             embed = corexcepctions(interaction),
             ephemeral = True,
             view = self.docs
          )
       except discord.InteractionResponded:
-         await interaction.response.send_message(
+         await interaction.followup.send(
             embed = corexcepctions(interaction),
             ephemeral = True,
             view = self.interactionb
