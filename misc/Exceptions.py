@@ -61,6 +61,14 @@ def nocore_(
    )
    return embed
 
+def rolecore_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = "Suomi's role cannot be cloned.",
+      color = discord.Color.dark_red()
+   )
+   return embed
+
 def permscore_(
         interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
    embed = discord.Embed(
@@ -335,6 +343,15 @@ def menuexception_(
    embed = discord.Embed(
       title = 'This menu was no created for you.',
       color = discord.Color.light_gray()
+   )
+   return embed
+
+# clone role exceptions
+def defaultclone_(
+        interaction: discord.Interaction) -> discord.Embed: # ignore weak warning
+   embed = discord.Embed(
+      title = '"everyone" role cannot be cloned.',
+      color = discord.Color.dark_red()
    )
    return embed
 
